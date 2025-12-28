@@ -1,0 +1,48 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Profile" %}{% endblock %}
+
+{% block app_content %}
+<div class="profile-layout">
+  <div class="profile-left">
+    <div class="profile-avatar">
+      {% if object.avatar %}
+        <img src="{{ object.avatar.url }}" alt="{{ object.display_name }}">
+      {% else %}
+        <span class="profile-avatar-initial">{{ request.user.username|first|upper }}</span>
+      {% endif %}
+    </div>
+    <div class="profile-username">
+      <span class="profile-username-label">user/</span>{{ object.display_name }}
+      <a href="{% url 'profiles:edit' %}" class="profile-edit-link">✎</a>
+      <a href="{% url 'profiles:settings' %}" class="profile-settings-link">⚙</a>
+    </div>
+  </div>
+  <div class="profile-center">
+    <div class="profile-post">
+      <h3>{% trans "Мой первый пост" %}</h3>
+      <p>{% trans "Я люблю коллекционировать предметы!" %}</p>
+    </div>
+    <div class="profile-post">
+      <h3>{% trans "Мой второй пост" %}</h3>
+      <p>{% trans "Сегодня я буду учиться пользоваться приложением Geeker." %}</p>
+    </div>
+    <div class="profile-post">
+      <h3>{% trans "Мой третий пост" %}</h3>
+      <p>{% trans "Я уже научился добавлять предметы в свою коллекцию. Это очень удобно и интересно!" %}</p>
+    </div>
+  </div>
+  <div class="profile-right">
+    <div class="profile-widget">
+      <p>{% trans "Здесь может быть виджет с любимой коллекцией или внешним профилем." %}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+

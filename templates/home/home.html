@@ -1,0 +1,51 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Домашняя страница" %}{% endblock %}
+
+{% block app_content %}
+<div class="home-header-row">
+  <div class="home-controls">
+    <form method="post" action="{% url 'set_language' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <label for="lang-select">{% trans "Язык" %}</label>
+      <select id="lang-select" name="language" onchange="this.form.submit()">
+        <option value="ru" {% if LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
+        <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+      </select>
+    </form>
+    <div class="theme-toggle">
+      <span>{% trans "Тема" %}:</span>
+      <button type="button" class="theme-btn" onclick="setTheme('light')">☀</button>
+      <button type="button" class="theme-btn" onclick="setTheme('dark')">🌙</button>
+      <button type="button" class="theme-btn" onclick="setTheme('accessible')">👁</button>
+    </div>
+  </div>
+</div>
+
+<div class="home-menu">
+  <a class="home-menu-item" href="{% url 'profiles:detail' %}">
+    <span class="home-menu-icon">👤</span>
+    <span class="home-menu-text">{% trans "Мой профиль" %}</span>
+  </a>
+  <a class="home-menu-item" href="{% url 'library:collection_list' %}">
+    <span class="home-menu-icon">📁</span>
+    <span class="home-menu-text">{% trans "Библиотека" %}</span>
+  </a>
+  <a class="home-menu-item" href="{% url 'blog:post_list' %}">
+    <span class="home-menu-icon">📝</span>
+    <span class="home-menu-text">{% trans "Блог" %}</span>
+  </a>
+  <a class="home-menu-item" href="{% url 'chat:chat_list' %}">
+    <span class="home-menu-icon">💬</span>
+    <span class="home-menu-text">{% trans "Чат и подписки" %}</span>
+  </a>
+  <a class="home-menu-item" href="{% url 'communities:community_list' %}">
+    <span class="home-menu-icon">⭐</span>
+    <span class="home-menu-text">{% trans "Сообщества" %}</span>
+  </a>
+</div>
+{% endblock %}
+
+

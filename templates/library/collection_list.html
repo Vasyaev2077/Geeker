@@ -1,0 +1,27 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Collections" %}{% endblock %}
+
+{% block app_content %}
+<h1>{% trans "Collections" %}</h1>
+<a href="{% url 'library:collection_create' %}" class="btn btn-primary">
+  {% trans "Create collection" %}
+</a>
+<div class="collection-grid">
+  {% for collection in object_list %}
+    {% include "library/_collection_card.html" with collection=collection %}
+  {% empty %}
+    <p>{% trans "No collections yet." %}</p>
+  {% endfor %}
+</div>
+{% include "base/_pagination.html" with page_obj=page_obj %}
+{% endblock %}
+
+
+
+
+
+
+
+

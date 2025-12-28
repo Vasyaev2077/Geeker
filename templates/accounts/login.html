@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Вход" %}{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <h1>{% trans "Вход" %}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">{% trans "Вход" %}</button>
+  </form>
+  <p>
+    {% trans "Ещё нет аккаунта?" %}
+    <a href="{% url 'accounts:register' %}">{% trans "Регистрация" %}</a>
+  </p>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

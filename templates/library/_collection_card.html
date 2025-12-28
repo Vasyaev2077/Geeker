@@ -1,0 +1,16 @@
+<article class="collection-card">
+  <h2>
+    <a href="{% url 'library:collection_detail' collection.pk %}">
+      {{ collection.title }}
+    </a>
+  </h2>
+  <p>{{ collection.description|truncatewords:20 }}</p>
+</article>
+
+
+
+
+
+
+
+

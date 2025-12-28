@@ -1,0 +1,74 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Редактирование профиля" %}{% endblock %}
+
+{% block app_content %}
+<div class="profile-edit-panel">
+  <div class="profile-edit-header">
+    <h2>{% trans "Информация" %}</h2>
+  </div>
+  <div class="profile-edit-body">
+    <div class="profile-edit-avatar-block">
+      <div class="profile-avatar profile-avatar-large">
+        {% if form.instance.avatar %}
+          <img src="{{ form.instance.avatar.url }}" alt="{{ form.instance.display_name }}">
+        {% else %}
+          <span class="profile-avatar-initial">{{ request.user.username|first|upper }}</span>
+        {% endif %}
+      </div>
+      <div class="profile-edit-name">
+        <strong>{{ form.instance.display_name }}</strong>
+      </div>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="profile-edit-form">
+      {% csrf_token %}
+      <div class="profile-edit-row">
+        <div class="profile-edit-icon">👤</div>
+        <div class="profile-edit-field">
+          <label for="{{ form.display_name.id_for_label }}">{% trans "Имя" %}</label>
+          {{ form.display_name }}
+        </div>
+      </div>
+      <div class="profile-edit-row">
+        <div class="profile-edit-icon">🖼</div>
+        <div class="profile-edit-field">
+          <label for="{{ form.avatar.id_for_label }}">{% trans "Аватар" %}</label>
+          {{ form.avatar }}
+        </div>
+      </div>
+      <div class="profile-edit-row">
+        <div class="profile-edit-icon">📝</div>
+        <div class="profile-edit-field">
+          <label for="{{ form.bio.id_for_label }}">Bio</label>
+          {{ form.bio }}
+        </div>
+      </div>
+      <div class="profile-edit-row">
+        <div class="profile-edit-icon">🌐</div>
+        <div class="profile-edit-field">
+          <label for="{{ form.language.id_for_label }}">{% trans "Язык интерфейса" %}</label>
+          {{ form.language }}
+        </div>
+      </div>
+      <div class="profile-edit-row">
+        <div class="profile-edit-icon">⏰</div>
+        <div class="profile-edit-field">
+          <label for="{{ form.timezone.id_for_label }}">{% trans "Часовой пояс" %}</label>
+          {{ form.timezone }}
+        </div>
+      </div>
+      <div class="profile-edit-actions">
+        <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

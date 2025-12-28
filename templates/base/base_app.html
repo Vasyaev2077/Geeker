@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<div class="layout">
+  <aside class="sidebar">
+    {% include "base/_sidebar.html" %}
+  </aside>
+  <main class="main">
+    {% include "base/_messages.html" %}
+    {% block app_content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+

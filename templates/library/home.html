@@ -1,0 +1,92 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Библиотека" %}{% endblock %}
+
+{% block app_content %}
+<form method="get" class="library-filters">
+  <div class="page-header">
+    <div></div>
+    <div class="page-header-actions">
+      <button type="button" class="search-icon-button" id="library-search-toggle">
+        🔍
+      </button>
+      <div class="library-search-input-row" id="library-search-row">
+        <button type="button" class="search-back" id="library-search-back">←</button>
+        <input
+          type="search"
+          name="q"
+          value="{{ query }}"
+          class="search-input"
+          placeholder="{% trans 'Поиск по коллекции' %}"
+        >
+        <button type="button" class="search-clear" id="library-search-clear">✕</button>
+        <label class="advanced-toggle">
+          <input type="checkbox" name="advanced" {% if advanced %}checked{% endif %}>
+          {% trans "Расширенный" %}
+        </label>
+      </div>
+      <select name="order" class="order-select search-extra">
+        <option value="recent" {% if current_order == 'recent' %}selected{% endif %}>{% trans "Недавно добавленные" %}</option>
+        <option value="oldest" {% if current_order == 'oldest' %}selected{% endif %}>{% trans "Давно добавленные" %}</option>
+        <option value="az" {% if current_order == 'az' %}selected{% endif %}>{% trans "От А до Я" %}</option>
+        <option value="za" {% if current_order == 'za' %}selected{% endif %}>{% trans "От Я до А" %}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="advanced-panel {% if not advanced %}advanced-hidden{% endif %}">
+    <label>
+      <input type="checkbox" name="search_in_description" {% if request.GET.search_in_description == 'on' %}checked{% endif %}>
+      {% trans "Искать только в описании" %}
+    </label>
+  </div>
+
+  <div class="pill-filters">
+    {% for section in sections %}
+      <label class="pill">
+        <input
+          type="checkbox"
+          name="sections"
+          value="{{ section.id }}"
+          {% if section.id in selected_sections %}checked{% endif %}
+        >
+        {{ section.name }}
+      </label>
+    {% empty %}
+      <span>{% trans "У вас пока нет разделов. Создайте их в админке." %}</span>
+    {% endfor %}
+  </div>
+
+</form>
+
+<div class="collection-grid" style="margin-top:0.8rem;">
+  {% for item in items %}
+    <article class="collection-card">
+      <div class="item-card-image">
+        {% with primary=item.media.all.0 %}
+          {% if primary %}
+            <img src="{{ primary.file.url }}" alt="{{ item.title }}">
+          {% endif %}
+        {% endwith %}
+      </div>
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.description|truncatewords:15 }}</p>
+    </article>
+  {% empty %}
+    <p>{% trans "Нет предметов в библиотеке." %}</p>
+  {% endfor %}
+</div>
+{% include "base/_pagination.html" with page_obj=page_obj %}
+<div style="margin-top:1rem;">
+  <a href="{% url 'library:collection_create' %}" class="btn btn-primary">
+    {% trans "Создать коллекцию" %}
+  </a>
+</div>
+{% endblock %}
+
+
+
+
+
+

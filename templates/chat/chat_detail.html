@@ -1,0 +1,64 @@
+{% extends "base/base_app.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Chat" %} #{{ object.pk }}{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  (function () {
+    const chatId = "{{ object.pk }}";
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const wsUrl = protocol + "://" + window.location.host + "/ws/chat/" + chatId + "/";
+    const socket = new WebSocket(wsUrl);
+    const log = document.getElementById("chat-log");
+    const input = document.getElementById("chat-message-input");
+    const form = document.getElementById("chat-form");
+
+    socket.onmessage = function (e) {
+      const data = JSON.parse(e.data);
+      const el = document.createElement("div");
+      el.textContent = data.message;
+      log.appendChild(el);
+    };
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!input.value) return;
+      socket.send(JSON.stringify({message: input.value}));
+      input.value = "";
+    });
+  })();
+</script>
+{% endblock %}
+
+{% block app_content %}
+<div class="chat-layout">
+  <aside class="chat-sidebar">
+    <h3>{% trans "Conversations" %}</h3>
+    <ul class="chat-conversation-list">
+      {% for chat in request.user.chats.all %}
+        <li class="{% if chat.pk == object.pk %}chat-conversation-active{% endif %}">
+          <a href="{% url 'chat:chat_detail' chat.pk %}">{% trans "Chat" %} #{{ chat.pk }}</a>
+        </li>
+      {% empty %}
+        <li>{% trans "No chats yet." %}</li>
+      {% endfor %}
+    </ul>
+  </aside>
+  <div class="chat-main">
+    <h1>{% trans "Chat" %} #{{ object.pk }}</h1>
+    <div id="chat-log" class="chat-log"></div>
+    <form id="chat-form" class="chat-input-row">
+      <input id="chat-message-input" type="text" autocomplete="off">
+      <button type="submit" class="btn btn-primary">{% trans "Send" %}</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+
+

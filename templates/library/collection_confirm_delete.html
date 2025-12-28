@@ -1,0 +1,18 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Удалить коллекцию" %}{% endblock %}
+
+{% block app_content %}
+<h1>{% trans "Удалить коллекцию" %}</h1>
+<p>{% trans "Вы действительно хотите удалить эту коллекцию и все её предметы?" %}</p>
+<p><strong>{{ object.title }}</strong></p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">{% trans "Да, удалить" %}</button>
+  <button type="button" class="btn btn-link" onclick="history.back()">{% trans "Отмена" %}</button>
+</form>
+{% endblock %}
+
+
+

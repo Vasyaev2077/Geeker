@@ -1,0 +1,18 @@
+{% load i18n %}
+<nav class="sidebar-nav">
+  <ul>
+    <li><a href="{% url 'core:home' %}">{% trans "Домашняя страница" %}</a></li>
+    <li><a href="{% url 'profiles:detail' %}">{% trans "Профиль" %}</a></li>
+    <li><a href="{% url 'library:home' %}">{% trans "Библиотека" %}</a></li>
+    <li><a href="{% url 'blog:post_list' %}">{% trans "Блог" %}</a></li>
+    <li><a href="{% url 'chat:chat_list' %}">{% trans "Чат и подписки" %}</a></li>
+    <li><a href="{% url 'communities:community_list' %}">{% trans "Сообщества" %}</a></li>
+  </ul>
+</nav>
+
+
+
+
+
+
+

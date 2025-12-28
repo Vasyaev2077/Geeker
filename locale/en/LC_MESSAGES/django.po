@@ -1,0 +1,83 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: geeker 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 00:00+0000\n"
+"PO-Revision-Date: 2025-12-28 00:00+0000\n"
+"Last-Translator: Geeker System\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Sidebar / navigation
+msgid "Домашняя страница"
+msgstr "Home"
+
+msgid "Профиль"
+msgstr "Profile"
+
+msgid "Библиотека"
+msgstr "Library"
+
+msgid "Блог"
+msgstr "Blog"
+
+msgid "Чат и подписки"
+msgstr "Chat and subscriptions"
+
+msgid "Сообщества"
+msgstr "Communities"
+
+# Home page
+msgid "Мой профиль"
+msgstr "My profile"
+
+msgid "Язык"
+msgstr "Language"
+
+msgid "Тема"
+msgstr "Theme"
+
+# Auth / navbar
+msgid "Выход"
+msgstr "Logout"
+
+msgid "Вход"
+msgstr "Login"
+
+msgid "Ещё нет аккаунта?"
+msgstr "No account yet?"
+
+msgid "Регистрация"
+msgstr "Register"
+
+msgid "Уже есть аккаунт?"
+msgstr "Already have an account?"
+
+# Profile demo posts
+msgid "Мой первый пост"
+msgstr "My first post"
+
+msgid "Я люблю коллекционировать предметы!"
+msgstr "I love collecting items!"
+
+msgid "Мой второй пост"
+msgstr "My second post"
+
+msgid "Сегодня я буду учиться пользоваться приложением Geeker."
+msgstr "Today I will learn how to use the Geeker app."
+
+msgid "Мой третий пост"
+msgstr "My third post"
+
+msgid "Я уже научился добавлять предметы в свою коллекцию. Это очень удобно и интересно!"
+msgstr "I have already learned how to add items to my collection. It is very convenient and interesting!"
+
+msgid "Здесь может быть виджет с любимой коллекцией или внешним профилем."
+msgstr "Here you can show a widget with a favourite collection or an external profile."
+
+
+

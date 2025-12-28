@@ -1,0 +1,25 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Chat" %}{% endblock %}
+
+{% block app_content %}
+<h1>{% trans "Chats" %}</h1>
+<ul>
+  {% for chat in object_list %}
+    <li>
+      <a href="{% url 'chat:chat_detail' chat.pk %}">{% trans "Chat" %} #{{ chat.pk }}</a>
+    </li>
+  {% empty %}
+    <li>{% trans "No chats yet." %}</li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+
+
+
+
+
+
+
