@@ -1,0 +1,44 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Добавить предмет" %}{% endblock %}
+
+{% block app_content %}
+<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
+<h1>{% trans "Добавить предмет в коллекцию" %}</h1>
+<form method="post" enctype="multipart/form-data" class="item-form">
+  {% csrf_token %}
+  <div class="item-form-grid">
+    <div class="item-form-main">
+      <p>
+        <label for="{{ form.collection.id_for_label }}">{% trans "Коллекция" %}</label><br>
+        {{ form.collection }}
+      </p>
+      <p>
+        <label for="{{ form.title.id_for_label }}">{% trans "Название" %}</label><br>
+        {{ form.title }}
+      </p>
+      <p>
+        <label for="{{ form.description.id_for_label }}">{% trans "Описание" %}</label><br>
+        {{ form.description }}
+      </p>
+      <p>
+        <label for="{{ form.sections.id_for_label }}">{% trans "Разделы" %}</label><br>
+        {{ form.sections }}
+      </p>
+    </div>
+    <div class="item-form-side">
+      <p>
+        <label for="id_images">{% trans "Изображения (до 5 штук)" %}</label><br>
+        <input type="file" name="images" id="id_images" accept="image/*" multiple>
+      </p>
+      <p class="hint">
+        {% trans "Первая выбранная картинка станет основной в карточке." %}
+      </p>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
+</form>
+{% endblock %}
+
+

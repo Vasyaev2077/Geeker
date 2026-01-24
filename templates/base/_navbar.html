@@ -1,0 +1,39 @@
+{% load i18n %}
+<header class="navbar">
+  <div class="navbar-left">
+    <button type="button" class="btn-icon navbar-burger" id="sidebar-toggle" title="{% trans 'Меню' %}">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    {% if request.path|slice:":9" == "/library/" %}
+      <span class="logo">Библиотека</span>
+    {% else %}
+      <span class="logo">Geeker</span>
+    {% endif %}
+  </div>
+  <div class="navbar-right">
+    {% if request.user.is_authenticated %}
+      <span class="navbar-user">{{ request.user.username }}</span>
+      <form method="post" action="{% url 'accounts:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-icon" title="{% trans 'Выход' %}">
+          <svg class="icon-logout" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M11 4h8a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 12H3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 9l-3 3 3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    {% else %}
+      <a href="{% url 'accounts:login' %}" class="btn btn-link">{% trans "Вход" %}</a>
+    {% endif %}
+  </div>
+</header>
+
+
+
+
+
+
+

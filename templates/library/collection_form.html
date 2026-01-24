@@ -1,0 +1,43 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Коллекция" %}{% endblock %}
+
+{% block app_content %}
+<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
+<h1>{% trans "Создать коллекцию" %}</h1>
+<p>{% trans "На этой странице вы можете сразу создать раздел, коллекцию и первый предмет." %}</p>
+<form method="post" enctype="multipart/form-data" class="item-form">
+  {% csrf_token %}
+  <div class="item-form-grid">
+    <div class="item-form-main">
+      <fieldset>
+        <legend>{% trans "Коллекция" %}</legend>
+        {{ form.as_p }}
+      </fieldset>
+      <fieldset style="margin-top:0.6rem;">
+        <legend>{% trans "Первый предмет" %}</legend>
+        {{ item_form.as_p }}
+      </fieldset>
+    </div>
+    <div class="item-form-side">
+      <fieldset>
+        <legend>{% trans "Новый раздел (по желанию)" %}</legend>
+        {{ section_form.as_p }}
+      </fieldset>
+      <p style="margin-top:0.6rem;">
+        <label for="id_images">{% trans "Изображения предмета (до 5 штук)" %}</label><br>
+        <input type="file" name="images" id="id_images" accept="image/*" multiple>
+      </p>
+      <p class="hint">
+        {% trans "Первая выбранная картинка станет основной в карточке." %}
+      </p>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" style="margin-top:0.8rem;">
+    {% trans "Сохранить" %}
+  </button>
+</form>
+{% endblock %}
+
+
