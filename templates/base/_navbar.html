@@ -8,6 +8,8 @@
     </button>
     {% if request.path|slice:":9" == "/library/" %}
       <span class="logo">Библиотека</span>
+    {% elif request.path|slice:":9" == "/profile/" %}
+      <span class="logo">{% trans "Профиль" %}</span>
     {% else %}
       <span class="logo">Geeker</span>
     {% endif %}

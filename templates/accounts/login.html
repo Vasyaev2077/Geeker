@@ -4,17 +4,36 @@
 {% block title %}{% trans "Вход" %}{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-  <h1>{% trans "Вход" %}</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">{% trans "Вход" %}</button>
-  </form>
-  <p>
-    {% trans "Ещё нет аккаунта?" %}
-    <a href="{% url 'accounts:register' %}">{% trans "Регистрация" %}</a>
-  </p>
+<div class="auth-shell">
+  <div class="auth-card auth-card-dark">
+    <h1 class="auth-title">{% trans "Вход" %}</h1>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <label class="auth-label" for="{{ form.username.id_for_label }}">{% trans "Имя пользователя" %}</label>
+      {{ form.username }}
+      {{ form.username.errors }}
+
+      <label class="auth-label" for="{{ form.password.id_for_label }}">{% trans "Пароль" %}</label>
+      {{ form.password }}
+      {{ form.password.errors }}
+
+      <button type="submit" class="btn btn-primary auth-submit">{% trans "Войти" %}</button>
+    </form>
+
+    <div class="auth-links">
+      <a href="{% url 'accounts:password_reset' %}">{% trans "Забыли пароль?" %}</a>
+    </div>
+
+    <div class="auth-divider"></div>
+
+    <div class="auth-links">
+      <span>{% trans "Новичок в Geeker?" %}</span>
+      <a href="{% url 'accounts:register' %}" class="auth-link-strong">{% trans "Зарегистрироваться" %}</a>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

@@ -5,6 +5,10 @@ SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 
+# Email (password reset etc.) - print emails to console in dev
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "Geeker <no-reply@localhost>"
+
 # Для локального запуска без PostgreSQL и Redis используем SQLite и
 # in-memory cache/Channels. Это позволяет просто проверить работу страниц.
 DATABASES = {

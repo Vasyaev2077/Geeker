@@ -1,7 +1,18 @@
 {% extends "base/base_app.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Редактирование профиля" %}{% endblock %}
+
+{% block extra_head %}
+{{ block.super }}
+<link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css">
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
+<script src="{% static 'js/profile_avatar.js' %}"></script>
+{% endblock %}
 
 {% block app_content %}
 <div class="profile-edit-panel">
@@ -10,12 +21,18 @@
   </div>
   <div class="profile-edit-body">
     <div class="profile-edit-avatar-block">
-      <div class="profile-avatar profile-avatar-large">
+      <div class="profile-avatar profile-avatar-large profile-avatar-editable">
         {% if form.instance.avatar %}
-          <img src="{{ form.instance.avatar.url }}" alt="{{ form.instance.display_name }}">
+          <img id="avatar-preview-img" src="{{ form.instance.avatar.url }}" alt="{{ form.instance.display_name }}">
+          <span id="avatar-preview-initial" class="profile-avatar-initial" style="display:none">{{ request.user.username|first|upper }}</span>
         {% else %}
-          <span class="profile-avatar-initial">{{ request.user.username|first|upper }}</span>
+          <img id="avatar-preview-img" src="" alt="{{ form.instance.display_name }}" style="display:none">
+          <span id="avatar-preview-initial" class="profile-avatar-initial">{{ request.user.username|first|upper }}</span>
         {% endif %}
+        <button type="button" id="avatar-edit-btn" class="avatar-edit-btn" aria-label="{% trans 'Изменить аватар' %}">
+          ✎
+        </button>
+        <span class="avatar-edit-hint">{% trans "Изменить" %}</span>
       </div>
       <div class="profile-edit-name">
         <strong>{{ form.instance.display_name }}</strong>
@@ -23,6 +40,12 @@
     </div>
     <form method="post" enctype="multipart/form-data" class="profile-edit-form">
       {% csrf_token %}
+      <div class="profile-hidden-file-input" style="display:none">
+        {{ form.avatar }}
+      </div>
+      {% if form.avatar.errors %}
+        <div class="field-error">{{ form.avatar.errors }}</div>
+      {% endif %}
       <div class="profile-edit-row">
         <div class="profile-edit-icon">👤</div>
         <div class="profile-edit-field">
@@ -31,17 +54,11 @@
         </div>
       </div>
       <div class="profile-edit-row">
-        <div class="profile-edit-icon">🖼</div>
-        <div class="profile-edit-field">
-          <label for="{{ form.avatar.id_for_label }}">{% trans "Аватар" %}</label>
-          {{ form.avatar }}
-        </div>
-      </div>
-      <div class="profile-edit-row">
         <div class="profile-edit-icon">📝</div>
         <div class="profile-edit-field">
           <label for="{{ form.bio.id_for_label }}">Bio</label>
           {{ form.bio }}
+          <div class="char-counter" id="bio-counter" aria-hidden="true">200</div>
         </div>
       </div>
       <div class="profile-edit-row">
@@ -62,6 +79,33 @@
         <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div id="avatar-crop-modal" class="modal" hidden aria-hidden="true">
+  <div class="modal-backdrop" data-avatar-close></div>
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="avatar-crop-title">
+    <div class="modal-header">
+      <h3 id="avatar-crop-title">{% trans "Выберите область аватара" %}</h3>
+      <button type="button" class="modal-close" data-avatar-close aria-label="{% trans 'Закрыть' %}">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="avatar-crop-workspace">
+        <div class="avatar-crop-canvas-wrap">
+          <img id="avatar-crop-img" class="avatar-crop-img" alt="">
+        </div>
+        <div class="avatar-crop-previews">
+          <div class="avatar-crop-preview avatar-crop-preview-lg"></div>
+          <div class="avatar-crop-preview avatar-crop-preview-md"></div>
+          <div class="avatar-crop-preview avatar-crop-preview-sm"></div>
+        </div>
+      </div>
+      <input id="avatar-crop-zoom" type="range" min="0" max="100" value="0" aria-label="{% trans 'Масштаб' %}" hidden>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn" data-avatar-close>{% trans "Отмена" %}</button>
+      <button type="button" class="btn btn-primary" id="avatar-crop-save">{% trans "Сохранить" %}</button>
+    </div>
   </div>
 </div>
 {% endblock %}

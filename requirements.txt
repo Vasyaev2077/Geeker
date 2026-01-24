@@ -12,4 +12,13 @@ django-cors-headers==4.6.0
 uvicorn[standard]==0.30.6
 gunicorn==23.0.0
 
+# Required by Django ImageField (profiles avatar)
+Pillow==11.1.0
+
+# Required by django.contrib.auth.hashers.BCryptSHA256PasswordHasher
+bcrypt==4.2.1
+
+# Optional: required if you use apps/integrations/storage.py (S3StorageAdapter)
+boto3==1.35.92
+
 

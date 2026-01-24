@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <title>{% block title %}Geeker{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}?v=20260122">
   {% block extra_head %}{% endblock %}
 </head>
 <body class="{% block body_class %}theme-light{% endblock %}">
@@ -14,7 +14,7 @@
   <div class="app-container">
     {% block content %}{% endblock %}
   </div>
-  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/main.js' %}?v=20260122"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>
