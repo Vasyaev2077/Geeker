@@ -1,0 +1,140 @@
+{% extends "base/base_app.html" %}
+{% load i18n static %}
+{% trans "Точно удалить раздел? Потом будет ещё одно подтверждение." as confirm_delete_section %}
+{% trans "Точно удалить предмет? Потом будет ещё одно подтверждение." as confirm_delete_item %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block app_content %}
+<button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Назад" %}</button>
+
+<div class="page-header" style="margin-top:0.3rem;">
+  <h1 style="margin:0;">{{ object.name }}</h1>
+  <div class="page-header-actions">
+    <form method="get" class="section-search" style="margin:0;">
+      <button type="button" class="search-icon-button" id="section-search-toggle">🔍</button>
+      <button type="button" class="search-icon-button search-adv-btn" id="section-adv-toggle" aria-label="{% trans 'Расширенный поиск' %}">✎</button>
+      <div class="section-search-input-row" id="section-search-row">
+        <input
+          type="search"
+          name="q"
+          value="{{ query }}"
+          class="search-input"
+          placeholder="{% trans 'Поиск по предметам' %}"
+        >
+        <button type="button" class="search-clear" id="section-search-clear">✕</button>
+      </div>
+      <div class="section-adv-menu" id="section-adv-menu" hidden>
+        <select name="order" class="order-select" id="section-order-select">
+          <option value="recent" {% if current_order == 'recent' %}selected{% endif %}>{% trans "Недавно добавленные" %}</option>
+          <option value="oldest" {% if current_order == 'oldest' %}selected{% endif %}>{% trans "Давно добавленные" %}</option>
+          <option value="az" {% if current_order == 'az' %}selected{% endif %}>{% trans "От А до Я" %}</option>
+          <option value="za" {% if current_order == 'za' %}selected{% endif %}>{% trans "От Я до А" %}</option>
+        </select>
+      </div>
+    </form>
+    <a href="{% url 'library:section_item_create' object.pk %}" class="btn btn-pill btn-pill-primary">
+      {% trans "+ Добавить предмет" %}
+    </a>
+  </div>
+</div>
+
+{% if object.description %}
+  <p style="max-width:900px; color:#6b7280; overflow-wrap:anywhere; word-break:break-word;">{{ object.description }}</p>
+{% endif %}
+
+<div class="collection-grid" style="margin-top:0.8rem;">
+  {% for item in items %}
+    <article class="collection-card">
+      <div class="post-menu item-card-menu">
+        <button type="button" class="post-menu-btn" data-menu-btn aria-label="Menu">…</button>
+        <div class="post-menu-dropdown" data-menu-dropdown hidden>
+          <a class="post-menu-item" href="{% url 'library:item_edit' item.pk %}?next={{ request.get_full_path|urlencode }}">{% trans "Редактировать" %}</a>
+          <button type="button"
+                  class="post-menu-item"
+                  data-item-move-btn
+                  data-move-url="{% url 'library:item_move' item.pk %}">
+            {% trans "Перенести в другой раздел" %}
+          </button>
+          <a class="post-menu-item post-menu-danger"
+             href="{% url 'library:item_delete' item.pk %}"
+             onclick='return confirm("{{ confirm_delete_item|escapejs }}")'>
+            {% trans "Удалить" %}
+          </a>
+        </div>
+      </div>
+      <div class="post-carousel item-card-carousel" data-carousel>
+        <div class="post-carousel-viewport">
+          <div class="post-carousel-track">
+            {% for m in item.media.all %}
+              <div class="post-carousel-slide">
+                <a href="{{ m.file.url }}" data-gallery-item data-gallery-group="item-{{ item.id }}" data-fullsrc="{{ m.file.url }}">
+                  <img class="post-carousel-img" src="{{ m.file.url }}" alt="{{ item.title }}">
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <button type="button" class="post-carousel-nav post-carousel-prev" data-carousel-prev aria-label="Prev">‹</button>
+        <button type="button" class="post-carousel-nav post-carousel-next" data-carousel-next aria-label="Next">›</button>
+        <div class="post-carousel-dots" data-carousel-dots>
+          {% for m in item.media.all %}
+            <button type="button" class="post-carousel-dot" data-carousel-dot data-index="{{ forloop.counter0 }}" aria-label="Slide {{ forloop.counter }}"></button>
+          {% endfor %}
+        </div>
+      </div>
+      <h3 style="margin-bottom:0.2rem;">
+        <a href="{% url 'library:item_detail' item.pk %}" style="text-decoration:none; color:inherit;">
+          {{ item.title }}
+        </a>
+      </h3>
+      {% if item.description %}
+        {% if item.description|length > 220 %}
+          <div class="post-text post-text-compact">
+            <div class="post-text-short">{{ item.description|slice:":220"|linebreaksbr }}…</div>
+            <div class="post-text-full" hidden>{{ item.description|linebreaksbr }}</div>
+            <button type="button" class="post-text-toggle" data-post-text-toggle>{% trans "Развернуть" %}</button>
+          </div>
+        {% else %}
+          <div class="post-text post-text-compact">{{ item.description|linebreaksbr }}</div>
+        {% endif %}
+      {% endif %}
+      <div class="item-card-date">
+        {% trans "Добавлено" %}: {{ item.created_at|date:"d.m.Y" }}
+      </div>
+    </article>
+  {% empty %}
+    <p style="color:#6b7280;">{% trans "В этом разделе пока нет предметов." %}</p>
+  {% endfor %}
+</div>
+
+<div class="item-move-modal" id="item-move-modal" hidden>
+  <div class="item-move-backdrop" data-item-move-close></div>
+  <div class="item-move-dialog" role="dialog" aria-modal="true">
+    <div class="item-move-head">
+      <div class="item-move-title">{% trans "Перенести предмет" %}</div>
+      <button type="button" class="btn btn-icon" data-item-move-close aria-label="{% trans 'Закрыть' %}">✕</button>
+    </div>
+    <form method="post" id="item-move-form">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path|default:'' }}">
+      <label for="item-move-section" style="font-weight:700;">{% trans "Выберите раздел" %}</label>
+      <select name="section_id" id="item-move-section" class="item-move-select" required>
+        {% for s in user_sections %}
+          <option value="{{ s.id }}" {% if s.id == object.id %}selected{% endif %}>{{ s.name }}</option>
+        {% endfor %}
+      </select>
+      <div class="item-move-actions">
+        <button type="button" class="btn btn-pill btn-pill-ghost" data-item-move-close>{% trans "Отмена" %}</button>
+        <button type="submit" class="btn btn-pill btn-pill-primary">{% trans "Перенести" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'js/library.js' %}?v=20260129"></script>
+{% endblock %}
+

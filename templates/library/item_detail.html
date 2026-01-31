@@ -1,17 +1,65 @@
 {% extends "base/base_app.html" %}
 {% load i18n %}
+{% trans "Точно удалить предмет? Потом будет ещё одно подтверждение." as confirm_delete_item %}
 
 {% block title %}{{ object.title }}{% endblock %}
 
 {% block app_content %}
-<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
-<h1>{{ object.title }}</h1>
-<p>{{ object.description }}</p>
-<p>
-  <a href="{% url 'library:item_edit' object.pk %}" class="btn btn-link">{% trans "Редактировать" %}</a>
-  <a href="{% url 'library:item_delete' object.pk %}" class="btn btn-link">{% trans "Удалить" %}</a>
-</p>
+<button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Назад" %}</button>
+<div class="page-header" style="margin-top:0.3rem;">
+  <h1 style="margin:0;">{{ object.title }}</h1>
+  <div class="page-header-actions">
+    <a href="{% url 'library:item_edit' object.pk %}?next={{ request.get_full_path|urlencode }}" class="btn btn-link">{% trans "Редактировать" %}</a>
+    <a href="{% url 'library:item_delete' object.pk %}" class="btn btn-link"
+       onclick="return confirm(&quot;{{ confirm_delete_item|escapejs }}&quot;)">
+      {% trans "Удалить" %}
+    </a>
+  </div>
+</div>
+
+{% if object.description %}
+  <p style="max-width:900px; color:#6b7280; overflow-wrap:anywhere; word-break:break-word;">{{ object.description }}</p>
+{% endif %}
+
+<div class="library-item-layout" style="margin-top:0.8rem;">
+  <div>
+    {% if object.media.all %}
+      <div class="library-media-grid">
+        {% for m in object.media.all %}
+          <a href="{{ m.file.url }}" data-gallery-item data-fullsrc="{{ m.file.url }}">
+            <img src="{{ m.file.url }}" alt="" style="width:100%; height:100%; object-fit:contain; display:block;">
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color:#6b7280;">{% trans "Изображений пока нет." %}</p>
+    {% endif %}
+  </div>
+
+  <div class="metadata-box">
+    <div style="font-weight:700; margin-bottom:0.5rem;">{% trans "Метаданные" %}</div>
+    {% if object.metadata %}
+      <dl style="margin:0; display:grid; gap:0.45rem;">
+        {% for k, v in object.metadata.items %}
+          <div style="display:grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap:0.6rem;">
+            <dt style="margin:0; color:#6b7280; overflow-wrap:anywhere;">{{ k }}</dt>
+            <dd style="margin:0; overflow-wrap:anywhere;">{{ v }}</dd>
+          </div>
+        {% endfor %}
+      </dl>
+    {% else %}
+      <div style="color:#6b7280;">{% trans "Нет данных." %}</div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'js/library.js' %}?v=20260129"></script>
+{% endblock %}
+
+ 
 
 
 

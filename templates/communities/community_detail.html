@@ -3,9 +3,68 @@
 
 {% block title %}{{ object.name }}{% endblock %}
 
+{% block body_class %}theme-light reddit-theme{% endblock %}
+
 {% block app_content %}
-<h1>{{ object.name }}</h1>
-<p>{{ object.description }}</p>
+<div class="communities-reddit">
+<div class="reddit-community-header">
+  <div class="reddit-community-banner"></div>
+  <div class="reddit-community-header-inner">
+    <div class="reddit-community-avatar">{{ object.name|slice:":1"|upper }}</div>
+    <div class="reddit-community-title-wrap">
+      <div class="reddit-community-title">{{ object.name }}</div>
+      <div class="reddit-community-handle">r/{{ object.slug }}</div>
+    </div>
+    <div class="reddit-community-actions">
+      <button type="button" class="btn btn-pill btn-pill-ghost" disabled>{% trans "+ Создать пост" %}</button>
+      <form method="post" action="{% url 'communities:community_join_toggle' object.slug %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-pill btn-pill-primary">
+          {% if is_member %}{% trans "Выйти" %}{% else %}{% trans "Вступить" %}{% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="communities-detail-grid">
+  <div class="communities-detail-main">
+    <div class="reddit-feed">
+      <div class="reddit-card reddit-post-card">
+        <div class="reddit-post-title">{% trans "Лента сообщества" %}</div>
+        <div class="reddit-post-body">
+          {% trans "Постов пока нет. Следующим шагом можно добавить модель постов для сообществ." %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="communities-detail-right">
+    <div class="reddit-card">
+      <div class="reddit-right-title">{% trans "О сообществе" %}</div>
+      {% if object.description %}
+        <div class="reddit-right-desc">{{ object.description }}</div>
+      {% else %}
+        <div class="reddit-right-desc reddit-muted">{% trans "Описание пока не задано." %}</div>
+      {% endif %}
+      <div class="reddit-right-meta">
+        <div><span class="reddit-muted">{% trans "Участники" %}:</span> {{ object.members_count|default:"0" }}</div>
+        <div><span class="reddit-muted">{% trans "Создано" %}:</span> {{ object.created_at|date:"d.m.Y" }}</div>
+        <div><span class="reddit-muted">{% trans "Владелец" %}:</span> {{ object.owner.username }}</div>
+      </div>
+    </div>
+
+    <div class="reddit-card" style="margin-top:0.8rem;">
+      <div class="reddit-right-title">{% trans "Правила" %}</div>
+      <ol class="reddit-rules">
+        <li>{% trans "Будьте вежливы" %}</li>
+        <li>{% trans "Без спама" %}</li>
+        <li>{% trans "Публикуйте по теме" %}</li>
+      </ol>
+    </div>
+  </aside>
+</div>
+</div>
 {% endblock %}
 
 

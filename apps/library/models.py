@@ -71,6 +71,17 @@ class Section(models.Model):
     )
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, db_index=True)
+    description = models.CharField(max_length=50, blank=True)
+    cover = models.ImageField(upload_to="sections/", blank=True, null=True)
+
+    # Internal mapping: each Section owns a single Collection (hidden in UI)
+    collection = models.OneToOneField(
+        "Collection",
+        on_delete=models.CASCADE,
+        related_name="section",
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         unique_together = ("owner", "slug")
@@ -80,8 +91,16 @@ class Section(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        # IMPORTANT: allow unicode so Cyrillic doesn't collapse to empty slug.
+        # Also ensure uniqueness per owner (unique_together owner+slug).
         if not self.slug:
-            self.slug = slugify(self.name)
+            base = slugify(self.name, allow_unicode=True) or "section"
+            candidate = base
+            n = 2
+            while Section.objects.filter(owner=self.owner, slug=candidate).exclude(pk=self.pk).exists():
+                candidate = f"{base}-{n}"
+                n += 1
+            self.slug = candidate
         super().save(*args, **kwargs)
 
 
@@ -143,7 +162,8 @@ class ItemMedia(TimeStampedModel):
     position = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ["position"]
+        # Always show cover first, then keep user's order
+        ordering = ["-is_primary", "position", "id"]
         indexes = [
             models.Index(fields=["item", "position"]),
         ]

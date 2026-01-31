@@ -1,16 +1,93 @@
 {% extends "base/base_app.html" %}
-{% load i18n %}
+{% load i18n static %}
 
-{% block title %}{% trans "Создать раздел" %}{% endblock %}
+{% block title %}{% if object %}{% trans "Редактировать раздел" %}{% else %}{% trans "Создать раздел" %}{% endif %}{% endblock %}
 
-{% block app_content %}
-<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
-<h1>{% trans "Создать раздел библиотеки" %}</h1>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
-</form>
+{% block extra_head %}
+{{ block.super }}
+<link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css">
 {% endblock %}
 
+{% block app_content %}
+<button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Назад" %}</button>
+<h1>{% if object %}{% trans "Редактировать раздел" %}{% else %}{% trans "Создать раздел библиотеки" %}{% endif %}</h1>
+<form method="post" enctype="multipart/form-data" class="item-form">
+  {% csrf_token %}
+  <div class="item-form-grid">
+    <div class="item-form-main">
+      <p>
+        <label for="{{ form.name.id_for_label }}">{% trans "Название" %}</label><br>
+        {{ form.name }}
+        {{ form.name.errors }}
+      </p>
+      <p>
+        <label for="{{ form.description.id_for_label }}">{% trans "Описание (что это за раздел)" %}</label><br>
+        <div class="section-desc-field">
+          {{ form.description }}
+          <div class="char-counter" data-char-counter data-for="{{ form.description.id_for_label }}" data-max="50">
+            <span data-current>0</span>/50
+          </div>
+        </div>
+        {{ form.description.errors }}
+      </p>
+    </div>
+    <div class="item-form-side">
+      <div class="section-cover-form-preview">
+        {% if object and object.cover %}
+          <img id="section-cover-preview-img" src="{{ object.cover.url }}" alt="{{ object.name }}">
+        {% else %}
+          <img id="section-cover-preview-img" src="" alt="" style="display:none;">
+          <div class="section-cover-form-placeholder"></div>
+        {% endif %}
+        <label for="{{ form.cover.id_for_label }}" id="section-cover-edit-btn" class="section-edit-btn" aria-label="{% trans 'Выбрать обложку' %}">+</label>
+      </div>
+      <div class="visually-hidden-file-input">
+        {{ form.cover }}
+      </div>
+      {{ form.cover.errors }}
+      <p class="hint">
+        {% trans "Обложка будет видна на карточке раздела в библиотеке." %}
+      </p>
+    </div>
+  </div>
+  <div style="margin-top:0.8rem;">
+    <button type="submit" class="btn btn-primary">
+      {% if object %}{% trans "Сохранить" %}{% else %}{% trans "Создать раздел" %}{% endif %}
+    </button>
+    <button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Отмена" %}</button>
+  </div>
+</form>
 
+<div id="section-cover-crop-modal" class="modal" hidden aria-hidden="true">
+  <div class="modal-backdrop" data-section-cover-close></div>
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="section-cover-crop-title">
+    <div class="modal-header">
+      <h3 id="section-cover-crop-title">{% trans "Выберите область обложки" %}</h3>
+      <button type="button" class="modal-close" data-section-cover-close aria-label="{% trans 'Закрыть' %}">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="avatar-crop-workspace">
+        <div class="avatar-crop-canvas-wrap">
+          <img id="section-cover-crop-img" class="avatar-crop-img" alt="">
+        </div>
+        <div class="avatar-crop-previews">
+          <div class="section-cover-crop-preview avatar-crop-preview-lg"></div>
+          <div class="section-cover-crop-preview avatar-crop-preview-md"></div>
+          <div class="section-cover-crop-preview avatar-crop-preview-sm"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn" data-section-cover-close>{% trans "Отмена" %}</button>
+      <button type="button" class="btn btn-primary" id="section-cover-crop-save">{% trans "Сохранить" %}</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
+  <script src="{% static 'js/section_cover_form.js' %}?v=20260126"></script>
+  <script src="{% static 'js/section_desc_counter.js' %}?v=20260126"></script>
+{% endblock %}

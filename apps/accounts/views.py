@@ -1,8 +1,9 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
+from .forms import LocalUserCreationForm
 
 
 class LoginView(View):
@@ -32,11 +33,11 @@ class RegisterView(View):
     success_url = reverse_lazy("accounts:login")
 
     def get(self, request):
-        form = UserCreationForm()
+        form = LocalUserCreationForm()
         return render(request, self.template_name, {"form": form})
 
     def post(self, request):
-        form = UserCreationForm(request.POST)
+        form = LocalUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect(self.success_url)

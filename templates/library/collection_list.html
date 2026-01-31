@@ -1,18 +1,28 @@
 {% extends "base/base_app.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Collections" %}{% endblock %}
+{% block title %}{% trans "Коллекции" %}{% endblock %}
 
 {% block app_content %}
-<h1>{% trans "Collections" %}</h1>
-<a href="{% url 'library:collection_create' %}" class="btn btn-primary">
-  {% trans "Create collection" %}
-</a>
+<div class="page-header">
+  <h1 style="margin:0;">{% trans "Коллекции" %}</h1>
+  <div class="page-header-actions">
+    <form method="get" style="display:flex; gap:0.5rem; align-items:center;">
+      <input type="search" name="q" value="{{ query }}" class="search-input" placeholder="{% trans 'Поиск по коллекциям' %}">
+      <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.9rem;">
+        <input type="checkbox" name="archived" {% if show_archived %}checked{% endif %}>
+        {% trans "Показывать архив" %}
+      </label>
+      <button type="submit" class="btn btn-link">{% trans "Найти" %}</button>
+    </form>
+    {# create collection hidden for now #}
+  </div>
+</div>
 <div class="collection-grid">
-  {% for collection in object_list %}
+  {% for collection in collections %}
     {% include "library/_collection_card.html" with collection=collection %}
   {% empty %}
-    <p>{% trans "No collections yet." %}</p>
+    <p>{% trans "Коллекций пока нет." %}</p>
   {% endfor %}
 </div>
 {% include "base/_pagination.html" with page_obj=page_obj %}

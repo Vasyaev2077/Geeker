@@ -4,6 +4,7 @@
 {% block title %}{% trans "Настройки" %}{% endblock %}
 
 {% block app_content %}
+<a class="back-link" href="{% url 'profiles:detail' %}">← {% trans "Назад" %}</a>
 <div class="profile-settings-panel">
   <div class="profile-settings-header">
     <div class="profile-settings-avatar">
@@ -19,34 +20,26 @@
     </div>
   </div>
   <div class="profile-settings-list">
-    <div class="profile-settings-item">
-      <span class="profile-settings-icon">👤</span>
-      <span class="profile-settings-text">{% trans "Мой аккаунт" %}</span>
-    </div>
-    <div class="profile-settings-item">
-      <span class="profile-settings-icon">🔔</span>
-      <span class="profile-settings-text">{% trans "Уведомления и звуки" %}</span>
-    </div>
-    <div class="profile-settings-item">
+    <a class="profile-settings-item profile-settings-link-row" href="{% url 'profiles:settings_privacy' %}">
       <span class="profile-settings-icon">🔒</span>
       <span class="profile-settings-text">{% trans "Конфиденциальность" %}</span>
-    </div>
-    <div class="profile-settings-item">
+    </a>
+    <a class="profile-settings-item profile-settings-link-row" href="{% url 'profiles:settings_notifications' %}">
+      <span class="profile-settings-icon">🔔</span>
+      <span class="profile-settings-text">{% trans "Уведомления и звуки" %}</span>
+    </a>
+    <a class="profile-settings-item profile-settings-link-row" href="{% url 'profiles:settings_chat' %}">
       <span class="profile-settings-icon">💬</span>
       <span class="profile-settings-text">{% trans "Настройки чатов" %}</span>
-    </div>
-    <div class="profile-settings-item">
-      <span class="profile-settings-icon">📂</span>
-      <span class="profile-settings-text">{% trans "Папки с чатами" %}</span>
-    </div>
-    <div class="profile-settings-item">
+    </a>
+    <a class="profile-settings-item profile-settings-link-row" href="{% url 'profiles:settings_advanced' %}">
       <span class="profile-settings-icon">⚙</span>
       <span class="profile-settings-text">{% trans "Продвинутые настройки" %}</span>
-    </div>
-    <div class="profile-settings-item">
+    </a>
+    <a class="profile-settings-item profile-settings-link-row" href="{% url 'profiles:settings_audio_video' %}">
       <span class="profile-settings-icon">🎙</span>
       <span class="profile-settings-text">{% trans "Звук и камера" %}</span>
-    </div>
+    </a>
   </div>
 </div>
 {% endblock %}

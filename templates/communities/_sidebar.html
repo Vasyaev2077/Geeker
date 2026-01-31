@@ -1,0 +1,39 @@
+{% load i18n %}
+
+<div class="reddit-side-card">
+  <div class="reddit-side-title">{% trans "Сообщества" %}</div>
+  <form method="get" action="{% url 'communities:community_list' %}" class="reddit-side-search">
+    <input type="search" name="q" value="{{ q|default:'' }}" placeholder="{% trans 'Поиск в сообществах' %}">
+  </form>
+</div>
+
+<div class="reddit-side-card">
+  <div class="reddit-side-subtitle">{% trans "Лучшие сообщества" %}</div>
+  <div class="reddit-side-list">
+    {% for c in sidebar_top %}
+      <a class="reddit-side-item" href="{% url 'communities:community_detail' c.slug %}">
+        <span class="reddit-side-icon">{{ c.name|slice:":1"|upper }}</span>
+        <span class="reddit-side-name">r/{{ c.slug }}</span>
+      </a>
+    {% empty %}
+      <div class="reddit-side-muted">{% trans "Пока нет сообществ." %}</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% if request.user.is_authenticated %}
+  <div class="reddit-side-card">
+    <div class="reddit-side-subtitle">{% trans "Мои" %}</div>
+    <div class="reddit-side-list">
+      {% for c in sidebar_mine %}
+        <a class="reddit-side-item" href="{% url 'communities:community_detail' c.slug %}">
+          <span class="reddit-side-icon">{{ c.name|slice:":1"|upper }}</span>
+          <span class="reddit-side-name">r/{{ c.slug }}</span>
+        </a>
+      {% empty %}
+        <div class="reddit-side-muted">{% trans "Вы пока не вступили ни в одно сообщество." %}</div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+

@@ -4,7 +4,7 @@
 {% block title %}{% trans "Коллекция" %}{% endblock %}
 
 {% block app_content %}
-<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
+<button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Назад" %}</button>
 <h1>{% trans "Создать коллекцию" %}</h1>
 <p>{% trans "На этой странице вы можете сразу создать раздел, коллекцию и первый предмет." %}</p>
 <form method="post" enctype="multipart/form-data" class="item-form">

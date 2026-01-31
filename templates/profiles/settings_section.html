@@ -1,0 +1,22 @@
+{% extends "base/base_app.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block app_content %}
+<a class="back-link" href="{% url 'profiles:settings' %}">← {% trans "Назад" %}</a>
+<div class="profile-settings-panel">
+  <div class="profile-settings-header">
+    <div class="profile-settings-user">
+      <strong>{{ title }}</strong><br>
+      <span class="profile-settings-username">@{{ request.user.username }}</span>
+    </div>
+  </div>
+  <div class="profile-settings-list">
+    <div class="profile-settings-item" style="border-bottom:none">
+      <span class="profile-settings-text">{% trans "Раздел в разработке. Дальше будем доделывать его вместе." %}</span>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

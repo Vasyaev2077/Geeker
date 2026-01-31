@@ -1,44 +1,193 @@
 {% extends "base/base_app.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Добавить предмет" %}{% endblock %}
 
 {% block app_content %}
-<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
-<h1>{% trans "Добавить предмет в коллекцию" %}</h1>
+<button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Назад" %}</button>
+<h1>{% if object %}{% trans "Редактировать предмет" %}{% else %}{% trans "Добавить предмет в коллекцию" %}{% endif %}</h1>
 <form method="post" enctype="multipart/form-data" class="item-form">
   {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.GET.next|default:'' }}">
   <div class="item-form-grid">
     <div class="item-form-main">
+      {{ form.non_field_errors }}
       <p>
         <label for="{{ form.collection.id_for_label }}">{% trans "Коллекция" %}</label><br>
         {{ form.collection }}
+        {{ form.collection.errors }}
       </p>
       <p>
         <label for="{{ form.title.id_for_label }}">{% trans "Название" %}</label><br>
         {{ form.title }}
+        {{ form.title.errors }}
       </p>
       <p>
         <label for="{{ form.description.id_for_label }}">{% trans "Описание" %}</label><br>
         {{ form.description }}
+        {{ form.description.errors }}
       </p>
       <p>
         <label for="{{ form.sections.id_for_label }}">{% trans "Разделы" %}</label><br>
         {{ form.sections }}
+        {{ form.sections.errors }}
       </p>
+
+      {% if object and media_items %}
+        <div class="item-existing-media item-existing-media-main">
+          <div style="font-weight:600; margin-bottom:0.4rem;">{% trans "Текущие изображения (обложка для карточки)" %}</div>
+          <div class="post-carousel item-existing-carousel" data-carousel data-item-existing-carousel>
+            <div class="post-carousel-viewport">
+              <div class="post-carousel-track">
+                {% for m in media_items %}
+                  <div class="post-carousel-slide">
+                    <a href="{{ m.file.url }}" data-gallery-item data-fullsrc="{{ m.file.url }}">
+                      <img class="post-carousel-img" src="{{ m.file.url }}" alt="">
+                    </a>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <button type="button" class="post-carousel-nav post-carousel-prev" data-carousel-prev aria-label="Prev">‹</button>
+            <button type="button" class="post-carousel-nav post-carousel-next" data-carousel-next aria-label="Next">›</button>
+            <div class="post-carousel-dots" data-carousel-dots>
+              {% for m in media_items %}
+                <button type="button" class="post-carousel-dot" data-carousel-dot data-index="{{ forloop.counter0 }}" aria-label="Slide {{ forloop.counter }}"></button>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="item-existing-actions" data-item-existing-actions>
+            {% for m in media_items %}
+              <input type="radio"
+                     name="primary_media_id"
+                     value="{{ m.id }}"
+                     {% if m.is_primary %}checked{% endif %}
+                     data-existing-primary-radio
+                     data-index="{{ forloop.counter0 }}">
+              <input type="checkbox"
+                     name="delete_media"
+                     value="{{ m.id }}"
+                     data-existing-delete-checkbox
+                     data-index="{{ forloop.counter0 }}">
+            {% endfor %}
+
+            <div class="item-existing-action-row">
+              <button type="button" class="btn btn-pill btn-pill-ghost" data-existing-make-primary>
+                {% trans "Сделать обложкой" %}
+              </button>
+              <label class="item-existing-delete-toggle">
+                <input type="checkbox" data-existing-delete-current>
+                {% trans "Удалить это фото" %}
+              </label>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {{ form.metadata }}
     </div>
     <div class="item-form-side">
+      <div class="barcode-box" data-barcode-box>
+        <div class="barcode-box-title">{% trans "Штрих‑код" %}</div>
+        <div class="barcode-alert" role="note">
+          <span class="barcode-alert-ic" aria-hidden="true">⚠</span>
+          <div class="barcode-alert-text">
+            <div class="barcode-alert-title">{% trans "Экспериментальная функция" %}</div>
+            <div class="barcode-alert-body">
+              {% trans "Может работать нестабильно: не все товары есть в открытых базах (особенно миниатюры/игры), качество фото и освещение влияют на распознавание, браузер может не дать доступ к камере, а также нужен интернет для поиска обложки и описания. Иногда базы данных ошибаются или возвращают похожий ISBN/код — поэтому книга или комикс могут подтянуться неверно (например, другой предмет или другое издание). В таких случаях лучше выбрать вариант из списка или заполнить поля вручную." %}
+            </div>
+          </div>
+        </div>
+        <div class="barcode-box-row">
+          <button type="button" class="btn btn-pill btn-pill-ghost" id="barcode-scan-btn">{% trans "Сканировать" %}</button>
+          <button type="button" class="btn btn-pill btn-pill-ghost" id="barcode-image-btn">{% trans "Загрузить фото" %}</button>
+          <input type="file" id="barcode-image-input" accept="image/*" style="display:none;">
+        </div>
+        <div class="barcode-box-row" style="margin-top:0.45rem;">
+          <input type="text" id="barcode-manual" class="search-input" placeholder="{% trans 'Введите код (ISBN/EAN)' %}" style="min-width:auto;">
+          <button type="button" class="btn btn-pill btn-pill-primary" id="barcode-lookup-btn">{% trans "Найти" %}</button>
+        </div>
+        <div class="barcode-result" id="barcode-result" hidden>
+          <div class="barcode-result-grid">
+            <div class="barcode-cover" id="barcode-cover" hidden>
+              <img id="barcode-cover-img" alt="">
+            </div>
+            <div>
+              <div class="barcode-code" id="barcode-code"></div>
+              <div class="barcode-title" id="barcode-title"></div>
+              <div class="barcode-authors" id="barcode-authors"></div>
+              <div class="barcode-desc" id="barcode-desc"></div>
+              <div class="barcode-candidates" id="barcode-candidates" hidden></div>
+              <div class="barcode-actions">
+                <button type="button" class="btn btn-pill btn-pill-primary" id="barcode-apply-btn">{% trans "Подставить в форму" %}</button>
+                <button type="button" class="btn btn-pill btn-pill-ghost" id="barcode-add-cover-btn" hidden>{% trans "Добавить обложку в фото" %}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="barcode-preview" id="barcode-preview" hidden>
+          <img id="barcode-preview-img" alt="">
+          <button type="button" class="barcode-preview-open" id="barcode-preview-open">{% trans "Посмотреть" %}</button>
+        </div>
+        <div class="barcode-hint" id="barcode-hint">
+          {% trans "Можно сканировать камерой или загрузить фото штрих‑кода. Лучше всего работает для ISBN (книги/комиксы)." %}
+        </div>
+        <div class="barcode-box-status" id="barcode-box-status"></div>
+      </div>
+
       <p>
-        <label for="id_images">{% trans "Изображения (до 5 штук)" %}</label><br>
-        <input type="file" name="images" id="id_images" accept="image/*" multiple>
+        <label for="id_images">{% trans "Изображения (до 10 штук)" %}</label><br>
+        <div class="item-images-picker">
+          <div class="visually-hidden-file-input">
+            <input type="file" name="images" id="id_images" accept="image/*" multiple>
+          </div>
+          <label for="id_images" class="btn btn-pill btn-pill-ghost">{% trans "Выбрать файлы" %}</label>
+          <button type="button" class="btn btn-pill btn-pill-ghost" id="images-add-more" style="display:none;">
+            {% trans "Добавить ещё" %}
+          </button>
+          <button type="button" class="btn btn-pill btn-pill-ghost" id="images-clear" style="display:none;">
+            {% trans "Очистить" %}
+          </button>
+          <span class="item-images-picked" id="images-picked-label">{% trans "Не выбрано" %}</span>
+        </div>
       </p>
+      <input type="hidden" name="primary_upload_idx" id="primary_upload_idx" value="">
+      <input type="hidden" name="primary_upload_override" id="primary_upload_override" value="">
+      <div class="item-new-media">
+        <div class="upload-preview-empty" id="upload-preview-empty">
+          {% trans "Выберите изображения — здесь появится превью и можно будет выбрать обложку." %}
+        </div>
+        <div id="library-upload-previews" class="upload-preview" aria-live="polite"></div>
+      </div>
       <p class="hint">
-        {% trans "Первая выбранная картинка станет основной в карточке." %}
+        {% trans "Можно выбрать несколько файлов сразу или добавить ещё. Клик по превью откроет просмотр." %}
       </p>
     </div>
   </div>
   <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
 </form>
+
+<div class="barcode-modal" id="barcode-modal" hidden>
+  <div class="barcode-modal-backdrop" data-barcode-close></div>
+  <div class="barcode-modal-dialog" role="dialog" aria-modal="true">
+    <div class="barcode-modal-head">
+      <div style="font-weight:800;">{% trans "Сканер штрих‑кода" %}</div>
+      <button type="button" class="btn btn-icon" data-barcode-close aria-label="{% trans 'Закрыть' %}">✕</button>
+    </div>
+    <video id="barcode-video" autoplay playsinline></video>
+    <div class="barcode-modal-foot">
+      <div class="barcode-modal-status" id="barcode-status">{% trans "Наведи камеру на штрих‑код…" %}</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'js/library.js' %}?v=20260129"></script>
+  <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js" defer></script>
+  <script src="{% static 'js/barcode.js' %}?v=20260131"></script>
 {% endblock %}
 
 

@@ -1,0 +1,21 @@
+{% extends "base/base.html" %}
+{% load i18n %}
+
+{# allow global theme switch; keep reddit-theme for layout styles #}
+{% block body_class %}theme-light reddit-theme{% endblock %}
+
+{% block content %}
+<div class="reddit-layout">
+  <aside class="reddit-left">
+    {% include "communities/_sidebar.html" %}
+  </aside>
+  <main class="reddit-main">
+    {% include "base/_messages.html" %}
+    {% block app_content %}{% endblock %}
+  </main>
+  <aside class="reddit-right">
+    {% block right_panel %}{% endblock %}
+  </aside>
+</div>
+{% endblock %}
+

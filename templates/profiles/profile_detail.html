@@ -1,7 +1,12 @@
 {% extends "base/base_app.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% trans "Profile" %}{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'js/profile_posts.js' %}"></script>
+{% endblock %}
 
 {% block app_content %}
 <div class="profile-layout">
@@ -20,23 +25,207 @@
     </div>
   </div>
   <div class="profile-center">
-    <div class="profile-post">
-      <h3>{% trans "Мой первый пост" %}</h3>
-      <p>{% trans "Я люблю коллекционировать предметы!" %}</p>
+    <div class="profile-feed-header">
+      <button type="button" class="btn btn-muted profile-create-post-btn" data-open-post-modal="create">
+        + {% trans "Создать пост" %}
+      </button>
     </div>
-    <div class="profile-post">
-      <h3>{% trans "Мой второй пост" %}</h3>
-      <p>{% trans "Сегодня я буду учиться пользоваться приложением Geeker." %}</p>
-    </div>
-    <div class="profile-post">
-      <h3>{% trans "Мой третий пост" %}</h3>
-      <p>{% trans "Я уже научился добавлять предметы в свою коллекцию. Это очень удобно и интересно!" %}</p>
+
+    <div class="profile-feed">
+      {% for post in posts %}
+        <article class="post-card" data-post-id="{{ post.id }}" id="post-{{ post.id }}">
+          <script type="application/json" id="post-media-json-{{ post.id }}">
+            [
+            {% for m in post.media_items.all %}
+              {% if forloop.counter0 < 8 %}
+                {"id": {{ m.id }}, "url": "{{ m.file.url }}"}{% if not forloop.last %},{% endif %}
+              {% endif %}
+            {% endfor %}
+            ]
+          </script>
+          <div class="post-header">
+            <div class="post-author">
+              <div class="post-author-avatar">
+                {% if object.avatar %}
+                  <img src="{{ object.avatar.url }}" alt="{{ object.display_name }}">
+                {% else %}
+                  <span class="profile-avatar-initial">{{ request.user.username|first|upper }}</span>
+                {% endif %}
+              </div>
+              <div class="post-author-meta">
+                <div class="post-author-name">{{ object.display_name }}</div>
+                <div class="post-date">{{ post.created_at|date:"d M Y, H:i" }}</div>
+              </div>
+              {% if post.is_pinned %}
+                <div class="post-badge">{% trans "Закреплено" %}</div>
+              {% endif %}
+            </div>
+
+            <div class="post-menu">
+              <button type="button" class="post-menu-btn" aria-label="{% trans 'Меню' %}" data-post-menu-btn>⋯</button>
+              <div class="post-menu-dropdown" hidden>
+                <form method="post" action="{% url 'profiles:post_pin' post.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="post-menu-item">{% trans "Закрепить" %}</button>
+                </form>
+                <button
+                  type="button"
+                  class="post-menu-item"
+                  data-open-post-modal="edit"
+                  data-post-id="{{ post.id }}"
+                  data-post-text="{{ post.text|escapejs }}"
+                  data-post-edit-url="{% url 'profiles:post_edit' post.id %}"
+                >
+                  {% trans "Редактировать" %}
+                </button>
+                <form method="post" action="{% url 'profiles:post_toggle_comments' post.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="post-menu-item">
+                    {% if post.comments_enabled %}{% trans "Отключить комментарии" %}{% else %}{% trans "Включить комментарии" %}{% endif %}
+                  </button>
+                </form>
+                <form method="post" action="{% url 'profiles:post_delete' post.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="post-menu-item post-menu-danger" data-confirm-delete>
+                    {% trans "Удалить" %}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          {% with media_count=post.media_items.count %}
+          {% if media_count %}
+            <div class="post-carousel" data-carousel data-carousel-count="{{ media_count }}">
+              <div class="post-carousel-viewport">
+                <div class="post-carousel-track">
+                  {% for m in post.media_items.all %}
+                    {% if forloop.counter0 < 8 %}
+                      <div class="post-carousel-slide">
+                        <img class="post-carousel-img" src="{{ m.file.url }}" alt="" data-carousel-img data-post-id="{{ post.id }}" data-index="{{ forloop.counter0 }}">
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              {% if media_count|add:0 > 1 %}
+                <button type="button" class="post-carousel-nav post-carousel-prev" data-carousel-prev aria-label="{% trans 'Назад' %}">‹</button>
+                <button type="button" class="post-carousel-nav post-carousel-next" data-carousel-next aria-label="{% trans 'Вперёд' %}">›</button>
+                <div class="post-carousel-dots" data-carousel-dots>
+                  {% for m in post.media_items.all %}
+                    {% if forloop.counter0 < 8 %}
+                      <button type="button" class="post-carousel-dot" data-carousel-dot data-index="{{ forloop.counter0 }}" aria-label="{{ forloop.counter }}"></button>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% endwith %}
+
+          {% if post.text %}
+            {% if post.text|length > 500 %}
+              <div class="post-text">
+                <div class="post-text-short">{{ post.text|slice:":500"|linebreaksbr }}…</div>
+                <div class="post-text-full" hidden>{{ post.text|linebreaksbr }}</div>
+                <button type="button" class="post-text-toggle" data-post-text-toggle>{% trans "Развернуть" %}</button>
+              </div>
+            {% else %}
+              <div class="post-text">{{ post.text|linebreaksbr }}</div>
+            {% endif %}
+          {% endif %}
+
+          {% if not post.comments_enabled %}
+            <div class="post-note">{% trans "Комментарии отключены" %}</div>
+          {% endif %}
+
+          <div class="post-actions">
+            <div class="post-votes">
+              <form method="post" action="{% url 'profiles:post_vote' post.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="value" value="1">
+                <button type="submit" class="post-vote-btn {% if post.current_user_votes and post.current_user_votes.0.value == 1 %}post-vote-active{% endif %}" data-vote-btn="1" aria-label="{% trans 'Голос вверх' %}">↑</button>
+              </form>
+              <div class="post-vote-score">{{ post.vote_score|default:0 }}</div>
+              <form method="post" action="{% url 'profiles:post_vote' post.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="value" value="-1">
+                <button type="submit" class="post-vote-btn {% if post.current_user_votes and post.current_user_votes.0.value == -1 %}post-vote-active{% endif %}" data-vote-btn="-1" aria-label="{% trans 'Голос вниз' %}">↓</button>
+              </form>
+            </div>
+
+            <button type="button" class="post-action-btn" data-post-comments-toggle>
+              💬 <span class="post-action-count">{{ post.comments_count|default:0 }}</span>
+            </button>
+            <button type="button" class="post-action-btn" data-post-share data-post-share-url="#post-{{ post.id }}">
+              ↗ {% trans "Поделиться" %}
+            </button>
+          </div>
+
+          <div class="post-comments" hidden>
+            {% if post.comments_enabled %}
+              <form method="post" action="{% url 'profiles:post_comment_create' post.id %}" class="post-comment-form">
+                {% csrf_token %}
+                <input type="text" name="text" maxlength="2000" class="post-comment-input" placeholder="{% trans 'Напишите комментарий…' %}">
+                <button type="submit" class="btn btn-primary">{% trans "Отправить" %}</button>
+              </form>
+            {% else %}
+              <div class="post-note">{% trans "Комментарии отключены" %}</div>
+            {% endif %}
+          </div>
+        </article>
+      {% empty %}
+        <div class="post-empty">
+          {% trans "Пока нет постов. Нажмите «Создать пост»." %}
+        </div>
+      {% endfor %}
+
+      {% include "base/_pagination.html" %}
     </div>
   </div>
   <div class="profile-right">
     <div class="profile-widget">
       <p>{% trans "Здесь может быть виджет с любимой коллекцией или внешним профилем." %}</p>
     </div>
+  </div>
+</div>
+
+<div id="lightbox" class="lightbox" hidden aria-hidden="true">
+  <div class="lightbox-backdrop" data-lightbox-close></div>
+  <button type="button" class="lightbox-close" data-lightbox-close aria-label="{% trans 'Закрыть' %}">×</button>
+  <button type="button" class="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="{% trans 'Назад' %}">‹</button>
+  <button type="button" class="lightbox-nav lightbox-next" data-lightbox-next aria-label="{% trans 'Вперёд' %}">›</button>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
+  <img id="lightbox-img" class="lightbox-img" alt="">
+</div>
+
+<div id="post-modal" class="modal" hidden aria-hidden="true">
+  <div class="modal-backdrop" data-post-close></div>
+  <div class="modal-dialog post-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="post-modal-title">
+    <div class="modal-header">
+      <h3 id="post-modal-title">{% trans "Новый пост" %}</h3>
+      <button type="button" class="modal-close" data-post-close aria-label="{% trans 'Закрыть' %}">×</button>
+    </div>
+    <form id="post-form" method="post" enctype="multipart/form-data" action="{% url 'profiles:post_create' %}">
+      {% csrf_token %}
+      <input type="hidden" name="deleted_media_ids" id="deleted-media-ids" value="">
+      <div class="modal-body post-modal-body">
+        <div class="post-upload">
+          <input id="post-media-input" type="file" name="media" accept="image/*" multiple hidden>
+          <button type="button" class="post-upload-drop" data-post-pick>
+            <div class="post-upload-icon">↑</div>
+            <div class="post-upload-title">{% trans "Добавьте фото или видео" %}</div>
+            <div class="post-upload-btn">{% trans "Загрузить с устройства" %}</div>
+          </button>
+          <div id="post-media-preview" class="post-upload-grid" hidden></div>
+        </div>
+        <textarea name="text" id="post-text" class="post-textarea" rows="3" maxlength="2000" placeholder="{% trans 'Напишите что-нибудь...' %}"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-post-close>{% trans "Отмена" %}</button>
+        <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}

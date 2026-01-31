@@ -4,17 +4,36 @@
 {% block title %}{% trans "Регистрация" %}{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-  <h1>{% trans "Регистрация" %}</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">{% trans "Регистрация" %}</button>
-  </form>
-  <p>
-    {% trans "Уже есть аккаунт?" %}
-    <a href="{% url 'accounts:login' %}">{% trans "Вход" %}</a>
-  </p>
+<div class="auth-shell">
+  <div class="auth-card auth-card-dark">
+    <h1 class="auth-title">{% trans "Регистрация" %}</h1>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <label class="auth-label" for="{{ form.username.id_for_label }}">{% trans "Имя пользователя" %}</label>
+      {{ form.username }}
+      {{ form.username.errors }}
+
+      <label class="auth-label" for="{{ form.email.id_for_label }}">{% trans "Email" %}</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+
+      <label class="auth-label" for="{{ form.password1.id_for_label }}">{% trans "Пароль" %}</label>
+      {{ form.password1 }}
+      {{ form.password1.errors }}
+
+      <label class="auth-label" for="{{ form.password2.id_for_label }}">{% trans "Повторите пароль" %}</label>
+      {{ form.password2 }}
+      {{ form.password2.errors }}
+      <button type="submit" class="btn btn-primary auth-submit">{% trans "Зарегистрироваться" %}</button>
+    </form>
+
+    <div class="auth-links">
+      <span>{% trans "Уже есть аккаунт?" %}</span>
+      <a href="{% url 'accounts:login' %}" class="auth-link-strong">{% trans "Войти" %}</a>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

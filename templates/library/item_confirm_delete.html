@@ -5,12 +5,20 @@
 
 {% block app_content %}
 <h1>{% trans "Удалить предмет" %}</h1>
-<p>{% trans "Вы действительно хотите удалить этот предмет?" %}</p>
+<p>{% trans "Это второе подтверждение." %}</p>
+<p style="color:#6b7280;">
+  {% trans "Подтверждение по email будет добавлено позже (письмо не отправляется). Пока это уведомление — заглушка." %}
+</p>
+<p>{% trans "Вы действительно хотите удалить этот предмет? Это действие необратимо." %}</p>
 <p><strong>{{ object.title }}</strong></p>
 <form method="post">
   {% csrf_token %}
+  <label style="display:flex; align-items:center; gap:0.5rem; margin:0.6rem 0;">
+    <input type="checkbox" required>
+    {% trans "Я понимаю, что удаляю предмет" %}
+  </label>
   <button type="submit" class="btn btn-primary">{% trans "Да, удалить" %}</button>
-  <button type="button" class="btn btn-link" onclick="history.back()">{% trans "Отмена" %}</button>
+  <button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Отмена" %}</button>
 </form>
 {% endblock %}
 
