@@ -35,6 +35,7 @@ services:
     volumes:
       - redis_data:/data
 
+<<<<<<< HEAD
   # Simple DB viewer (works in browser, no JDBC/native client issues)
   adminer:
     image: adminer:4
@@ -43,6 +44,8 @@ services:
     depends_on:
       - db
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 volumes:
   db_data:
   redis_data:

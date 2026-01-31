@@ -1,10 +1,14 @@
 {% extends "base/base_app.html" %}
 {% load i18n %}
+<<<<<<< HEAD
 {% trans "Точно удалить предмет? Потом будет ещё одно подтверждение." as confirm_delete_item %}
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 {% block title %}{{ object.title }}{% endblock %}
 
 {% block app_content %}
+<<<<<<< HEAD
 <button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Назад" %}</button>
 <div class="page-header" style="margin-top:0.3rem;">
   <h1 style="margin:0;">{{ object.title }}</h1>
@@ -61,6 +65,17 @@
 
  
 
+=======
+<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
+<h1>{{ object.title }}</h1>
+<p>{{ object.description }}</p>
+<p>
+  <a href="{% url 'library:item_edit' object.pk %}" class="btn btn-link">{% trans "Редактировать" %}</a>
+  <a href="{% url 'library:item_delete' object.pk %}" class="btn btn-link">{% trans "Удалить" %}</a>
+</p>
+{% endblock %}
+
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 
 

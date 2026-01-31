@@ -10,8 +10,11 @@
       <span class="logo">Библиотека</span>
     {% elif request.path|slice:":9" == "/profile/" %}
       <span class="logo">{% trans "Профиль" %}</span>
+<<<<<<< HEAD
     {% elif request.path|slice:":13" == "/communities/" %}
       <span class="logo">{% trans "Сообщества" %}</span>
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
     {% else %}
       <span class="logo">Geeker</span>
     {% endif %}

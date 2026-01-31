@@ -1,7 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+<<<<<<< HEAD
 from django.views.generic import ListView, DetailView, View
 from django.db.models import Count
 from django.shortcuts import redirect
+=======
+from django.views.generic import ListView, DetailView
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 from .models import Community
 
 
@@ -11,6 +15,7 @@ class CommunityListView(LoginRequiredMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
+<<<<<<< HEAD
         qs = (
             Community.objects.filter(visibility=Community.Visibility.PUBLIC)
             .annotate(members_count=Count("members", distinct=True))
@@ -27,6 +32,9 @@ class CommunityListView(LoginRequiredMixin, ListView):
         ctx["sidebar_top"] = list(self.get_queryset()[:20])
         ctx["sidebar_mine"] = list(self.request.user.communities.all().order_by("name")[:20])
         return ctx
+=======
+        return Community.objects.filter(visibility=Community.Visibility.PUBLIC)
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 
 class CommunityDetailView(LoginRequiredMixin, DetailView):
@@ -35,6 +43,7 @@ class CommunityDetailView(LoginRequiredMixin, DetailView):
     slug_field = "slug"
     slug_url_kwarg = "slug"
 
+<<<<<<< HEAD
     def get_queryset(self):
         return (
             Community.objects.select_related("owner")
@@ -71,6 +80,8 @@ class CommunityJoinToggleView(LoginRequiredMixin, View):
 
         return redirect("communities:community_detail", slug=slug)
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 
 

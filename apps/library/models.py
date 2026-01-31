@@ -71,6 +71,7 @@ class Section(models.Model):
     )
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=120, db_index=True)
+<<<<<<< HEAD
     description = models.CharField(max_length=50, blank=True)
     cover = models.ImageField(upload_to="sections/", blank=True, null=True)
 
@@ -82,6 +83,8 @@ class Section(models.Model):
         null=True,
         blank=True,
     )
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
     class Meta:
         unique_together = ("owner", "slug")
@@ -91,6 +94,7 @@ class Section(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+<<<<<<< HEAD
         # IMPORTANT: allow unicode so Cyrillic doesn't collapse to empty slug.
         # Also ensure uniqueness per owner (unique_together owner+slug).
         if not self.slug:
@@ -101,6 +105,10 @@ class Section(models.Model):
                 candidate = f"{base}-{n}"
                 n += 1
             self.slug = candidate
+=======
+        if not self.slug:
+            self.slug = slugify(self.name)
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
         super().save(*args, **kwargs)
 
 
@@ -162,8 +170,12 @@ class ItemMedia(TimeStampedModel):
     position = models.PositiveIntegerField(default=0)
 
     class Meta:
+<<<<<<< HEAD
         # Always show cover first, then keep user's order
         ordering = ["-is_primary", "position", "id"]
+=======
+        ordering = ["position"]
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
         indexes = [
             models.Index(fields=["item", "position"]),
         ]

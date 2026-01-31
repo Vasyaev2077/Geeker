@@ -1,9 +1,14 @@
 {% extends "base/base_app.html" %}
+<<<<<<< HEAD
 {% load i18n static %}
+=======
+{% load i18n %}
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 {% block title %}{% trans "Добавить предмет" %}{% endblock %}
 
 {% block app_content %}
+<<<<<<< HEAD
 <button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Назад" %}</button>
 <h1>{% if object %}{% trans "Редактировать предмет" %}{% else %}{% trans "Добавить предмет в коллекцию" %}{% endif %}</h1>
 <form method="post" enctype="multipart/form-data" class="item-form">
@@ -16,20 +21,38 @@
         <label for="{{ form.collection.id_for_label }}">{% trans "Коллекция" %}</label><br>
         {{ form.collection }}
         {{ form.collection.errors }}
+=======
+<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
+<h1>{% trans "Добавить предмет в коллекцию" %}</h1>
+<form method="post" enctype="multipart/form-data" class="item-form">
+  {% csrf_token %}
+  <div class="item-form-grid">
+    <div class="item-form-main">
+      <p>
+        <label for="{{ form.collection.id_for_label }}">{% trans "Коллекция" %}</label><br>
+        {{ form.collection }}
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
       </p>
       <p>
         <label for="{{ form.title.id_for_label }}">{% trans "Название" %}</label><br>
         {{ form.title }}
+<<<<<<< HEAD
         {{ form.title.errors }}
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
       </p>
       <p>
         <label for="{{ form.description.id_for_label }}">{% trans "Описание" %}</label><br>
         {{ form.description }}
+<<<<<<< HEAD
         {{ form.description.errors }}
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
       </p>
       <p>
         <label for="{{ form.sections.id_for_label }}">{% trans "Разделы" %}</label><br>
         {{ form.sections }}
+<<<<<<< HEAD
         {{ form.sections.errors }}
       </p>
 
@@ -162,11 +185,23 @@
       </div>
       <p class="hint">
         {% trans "Можно выбрать несколько файлов сразу или добавить ещё. Клик по превью откроет просмотр." %}
+=======
+      </p>
+    </div>
+    <div class="item-form-side">
+      <p>
+        <label for="id_images">{% trans "Изображения (до 5 штук)" %}</label><br>
+        <input type="file" name="images" id="id_images" accept="image/*" multiple>
+      </p>
+      <p class="hint">
+        {% trans "Первая выбранная картинка станет основной в карточке." %}
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
       </p>
     </div>
   </div>
   <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
 </form>
+<<<<<<< HEAD
 
 <div class="barcode-modal" id="barcode-modal" hidden>
   <div class="barcode-modal-backdrop" data-barcode-close></div>
@@ -188,6 +223,8 @@
   <script src="{% static 'js/library.js' %}?v=20260129"></script>
   <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js" defer></script>
   <script src="{% static 'js/barcode.js' %}?v=20260131"></script>
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 {% endblock %}
 
 

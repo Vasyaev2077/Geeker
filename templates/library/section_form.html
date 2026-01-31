@@ -1,4 +1,5 @@
 {% extends "base/base_app.html" %}
+<<<<<<< HEAD
 {% load i18n static %}
 
 {% block title %}{% if object %}{% trans "Редактировать раздел" %}{% else %}{% trans "Создать раздел" %}{% endif %}{% endblock %}
@@ -91,3 +92,20 @@
   <script src="{% static 'js/section_cover_form.js' %}?v=20260126"></script>
   <script src="{% static 'js/section_desc_counter.js' %}?v=20260126"></script>
 {% endblock %}
+=======
+{% load i18n %}
+
+{% block title %}{% trans "Создать раздел" %}{% endblock %}
+
+{% block app_content %}
+<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
+<h1>{% trans "Создать раздел библиотеки" %}</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
+</form>
+{% endblock %}
+
+
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753

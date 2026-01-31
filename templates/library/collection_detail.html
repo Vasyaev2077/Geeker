@@ -1,11 +1,19 @@
 {% extends "base/base_app.html" %}
+<<<<<<< HEAD
 {% load i18n static %}
 {% trans "Точно удалить предмет? Потом будет ещё одно подтверждение." as confirm_delete_item %}
+=======
+{% load i18n %}
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 {% block title %}{{ object.title }}{% endblock %}
 
 {% block app_content %}
+<<<<<<< HEAD
 <button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Назад" %}</button>
+=======
+<button type="button" class="btn btn-link" onclick="history.back()">{% trans "← Назад" %}</button>
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 <h1>{{ object.title }}</h1>
 <p>{{ object.description }}</p>
 <p>
@@ -14,6 +22,7 @@
 </p>
 
 <section>
+<<<<<<< HEAD
   <div class="page-header" style="margin-top:1rem;">
     <h2 style="margin:0;">{% trans "Предметы" %}</h2>
     <div class="page-header-actions">
@@ -114,6 +123,19 @@
 {% block extra_js %}
   {{ block.super }}
   <script src="{% static 'js/library.js' %}?v=20260129"></script>
+=======
+  <h2>{% trans "Items" %}</h2>
+  <ul>
+    {% for item in object.items.all %}
+      <li>
+        <a href="{% url 'library:item_detail' item.pk %}">{{ item.title }}</a>
+      </li>
+    {% empty %}
+      <li>{% trans "No items yet." %}</li>
+    {% endfor %}
+  </ul>
+</section>
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 {% endblock %}
 
 

@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+<<<<<<< HEAD
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
 from django.db.models import Q
@@ -16,10 +17,18 @@ import json
 import urllib.request
 import urllib.parse
 import urllib.error
+=======
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.db.models import Q
+from .models import Collection, Item, Section
+from .forms import SectionForm, CollectionForm, ItemInlineForm
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 
 class HomeView(LoginRequiredMixin, ListView):
     """
+<<<<<<< HEAD
     Главная вкладка библиотеки: список разделов (пользователь создаёт вручную).
     Можно выбрать несколько разделов — они разворачиваются и показывают предметы.
     """
@@ -53,10 +62,54 @@ class HomeView(LoginRequiredMixin, ListView):
             qs = qs.order_by("-title", "id")
         else:
             qs = qs.order_by("-created_at", "-id")
+=======
+    Главная вкладка библиотеки: карточки предметов с фильтрами по разделам
+    и поиском.
+    """
+
+    model = Item
+    template_name = "library/home.html"
+    context_object_name = "items"
+    paginate_by = 20
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = (
+            Item.objects.filter(collection__owner=user, collection__is_archived=False)
+            .select_related("collection")
+            .prefetch_related("media", "sections")
+        )
+
+        # Простой/расширенный поиск
+        query = self.request.GET.get("q")
+        if query:
+            if self.request.GET.get("search_in_description") == "on":
+                qs = qs.filter(description__icontains=query)
+            else:
+                qs = qs.filter(Q(title__icontains=query) | Q(description__icontains=query))
+
+        # Фильтр по разделам (можно выбрать несколько)
+        section_ids = self.request.GET.getlist("sections")
+        if section_ids:
+            qs = qs.filter(sections__id__in=section_ids).distinct()
+
+        # Сортировка
+        order = self.request.GET.get("order")
+        if order == "recent":
+            qs = qs.order_by("-created_at")
+        elif order == "oldest":
+            qs = qs.order_by("created_at")
+        elif order == "az":
+            qs = qs.order_by("title")
+        elif order == "za":
+            qs = qs.order_by("-title")
+
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
         return qs
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+<<<<<<< HEAD
         query = (self.request.GET.get("q") or "").strip()
         ctx["query"] = query
         ctx["advanced"] = self.request.GET.get("advanced") == "on"
@@ -100,6 +153,21 @@ class CollectionListView(LoginRequiredMixin, ListView):
         return ctx
 
 
+=======
+        user = self.request.user
+        ctx["sections"] = Section.objects.filter(owner=user)
+        ctx["selected_sections"] = [int(s) for s in self.request.GET.getlist("sections") if s.isdigit()]
+        ctx["current_order"] = self.request.GET.get("order", "recent")
+        ctx["query"] = self.request.GET.get("q", "")
+        ctx["advanced"] = self.request.GET.get("advanced") == "on"
+        return ctx
+
+
+class CollectionListView(HomeView):
+    template_name = "library/collection_list.html"
+
+
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 class CollectionDetailView(LoginRequiredMixin, DetailView):
     model = Collection
     template_name = "library/collection_detail.html"
@@ -111,11 +179,14 @@ class CollectionDetailView(LoginRequiredMixin, DetailView):
             .filter(owner=self.request.user)
         )
 
+<<<<<<< HEAD
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         ctx["user_sections"] = Section.objects.filter(owner=self.request.user).select_related("collection").order_by("name", "id")
         return ctx
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 class CollectionCreateView(LoginRequiredMixin, CreateView):
     """
@@ -171,6 +242,7 @@ class CollectionCreateView(LoginRequiredMixin, CreateView):
 
         images = self.request.FILES.getlist("images")
         from .models import ItemMedia
+<<<<<<< HEAD
         primary_upload_idx = self.request.POST.get("primary_upload_idx") or ""
         try:
             primary_idx = int(primary_upload_idx)
@@ -178,11 +250,19 @@ class CollectionCreateView(LoginRequiredMixin, CreateView):
             primary_idx = 0
 
         for idx, image in enumerate(images[:10]):
+=======
+
+        for idx, image in enumerate(images[:5]):
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
             ItemMedia.objects.create(
                 item=item,
                 file=image,
                 type=ItemMedia.MediaType.IMAGE,
+<<<<<<< HEAD
                 is_primary=idx == primary_idx,
+=======
+                is_primary=idx == 0,
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
                 position=idx,
             )
 
@@ -219,6 +299,7 @@ class ItemDetailView(LoginRequiredMixin, DetailView):
     template_name = "library/item_detail.html"
 
     def get_queryset(self):
+<<<<<<< HEAD
         return (
             Item.objects.select_related("collection", "collection__owner")
             .prefetch_related("media", "tags", "sections")
@@ -254,6 +335,16 @@ class ItemMoveToSectionView(LoginRequiredMixin, View):
 class ItemCreateView(LoginRequiredMixin, CreateView):
     model = Item
     form_class = ItemForm
+=======
+        return Item.objects.select_related("collection", "collection__owner").prefetch_related(
+            "media", "tags"
+        )
+
+
+class ItemCreateView(LoginRequiredMixin, CreateView):
+    model = Item
+    fields = ["collection", "title", "description", "sections"]
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
     template_name = "library/item_form.html"
     success_url = reverse_lazy("library:home")
 
@@ -266,6 +357,7 @@ class ItemCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         images = self.request.FILES.getlist("images")
+<<<<<<< HEAD
         if images:
             from .models import ItemMedia
             primary_upload_idx = self.request.POST.get("primary_upload_idx") or ""
@@ -347,12 +439,31 @@ class SectionItemCreateView(LoginRequiredMixin, CreateView):
 class ItemUpdateView(LoginRequiredMixin, UpdateView):
     model = Item
     form_class = ItemForm
+=======
+        for idx, image in enumerate(images[:5]):
+            from .models import ItemMedia
+
+            ItemMedia.objects.create(
+                item=self.object,
+                file=image,
+                type=ItemMedia.MediaType.IMAGE,
+                is_primary=idx == 0,
+                position=idx,
+            )
+        return response
+
+
+class ItemUpdateView(LoginRequiredMixin, UpdateView):
+    model = Item
+    form_class = ItemInlineForm
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
     template_name = "library/item_form.html"
     success_url = reverse_lazy("library:home")
 
     def get_queryset(self):
         return Item.objects.filter(collection__owner=self.request.user)
 
+<<<<<<< HEAD
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["collection"].queryset = Collection.objects.filter(owner=self.request.user)
@@ -433,6 +544,8 @@ class ItemUpdateView(LoginRequiredMixin, UpdateView):
 
         return reverse("library:collection_detail", args=[self.object.collection_id])
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 class ItemDeleteView(LoginRequiredMixin, DeleteView):
     model = Item
@@ -451,6 +564,7 @@ class SectionCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+<<<<<<< HEAD
         response = super().form_valid(form)
         # ensure an internal collection exists
         if not self.object.collection_id:
@@ -498,6 +612,9 @@ class SectionDetailView(LoginRequiredMixin, DetailView):
         ctx["current_order"] = order
         ctx["user_sections"] = Section.objects.filter(owner=self.request.user).select_related("collection").order_by("name", "id")
         return ctx
+=======
+        return super().form_valid(form)
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 
 class SectionUpdateView(LoginRequiredMixin, UpdateView):
@@ -519,6 +636,7 @@ class SectionDeleteView(LoginRequiredMixin, DeleteView):
         return Section.objects.filter(owner=self.request.user)
 
 
+<<<<<<< HEAD
 @method_decorator(csrf_protect, name="dispatch")
 class BarcodeLookupView(LoginRequiredMixin, View):
     """
@@ -909,6 +1027,8 @@ class FetchImageView(LoginRequiredMixin, View):
         return HttpResponse(data, content_type=ctype)
 
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 
 

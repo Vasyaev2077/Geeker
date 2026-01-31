@@ -10,7 +10,11 @@
 <form method="post">
   {% csrf_token %}
   <button type="submit" class="btn btn-primary">{% trans "Да, удалить" %}</button>
+<<<<<<< HEAD
   <button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Отмена" %}</button>
+=======
+  <button type="button" class="btn btn-link" onclick="history.back()">{% trans "Отмена" %}</button>
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 </form>
 {% endblock %}
 

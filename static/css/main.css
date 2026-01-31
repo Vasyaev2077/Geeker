@@ -9,8 +9,13 @@ body {
 }
 
 .theme-dark {
+<<<<<<< HEAD
   background: #0b0f14;
   color: #e5e7eb;
+=======
+  background: #121212;
+  color: #f4f4f7;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 .theme-accessible {
@@ -26,9 +31,12 @@ body {
   padding: 0.25rem 1rem;
   background: #1f2933;
   color: #fff;
+<<<<<<< HEAD
   position: sticky;
   top: 0;
   z-index: 1000;
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 .navbar-left,
@@ -88,7 +96,11 @@ body {
 
 .layout {
   display: flex;
+<<<<<<< HEAD
   min-height: calc(100vh - var(--navbar-h, 0px));
+=======
+  min-height: calc(100vh - 48px);
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 .sidebar-collapsed .sidebar {
@@ -100,6 +112,7 @@ body {
   background: #111827;
   color: #e5e7eb;
   padding: 1rem;
+<<<<<<< HEAD
   position: sticky;
   top: var(--navbar-h, 0px);
   height: calc(100vh - var(--navbar-h, 0px));
@@ -114,6 +127,8 @@ body {
   flex: 1 1 auto;
   overflow-y: auto;
   min-height: 0; /* important for flex overflow */
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 /* Темозависимые цвета навигации и сайдбара */
@@ -128,6 +143,7 @@ body.theme-light .sidebar {
 }
 
 body.theme-dark .navbar {
+<<<<<<< HEAD
   background: #0b0f14;
   color: #e5e7eb;
   border-bottom: 1px solid rgba(229, 231, 235, 0.12);
@@ -536,6 +552,15 @@ body.theme-dark .collection-card {
 
 body.theme-dark .community-row {
   border-bottom: 1px solid rgba(229, 231, 235, 0.10);
+=======
+  background: #5b21b6; /* фиолетовый */
+  color: #f9fafb;
+}
+
+body.theme-dark .sidebar {
+  background: #4c1d95;
+  color: #ede9fe;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 body.theme-accessible .navbar {
@@ -569,6 +594,7 @@ body.theme-accessible .sidebar-nav a {
   text-decoration: underline;
 }
 
+<<<<<<< HEAD
 /* Theme switcher pinned to bottom-right of sidebar */
 .sidebar-theme-switch {
   margin-top: auto;
@@ -604,18 +630,29 @@ body.theme-accessible .sidebar-nav a {
   flex: 1;
   padding: 1.5rem;
   min-width: 0;
+=======
+.main {
+  flex: 1;
+  padding: 1.5rem;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 .collection-grid {
   display: grid;
+<<<<<<< HEAD
   /* Bigger cards */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.2rem;
+=======
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
   margin-top: 1rem;
 }
 
 .collection-card {
   background: #fff;
+<<<<<<< HEAD
   border-radius: 14px;
   padding: 1.1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -664,6 +701,11 @@ body.theme-dark .item-card-date {
 .item-card-menu .post-menu-btn:hover {
   background: #fff;
   border-color: rgba(17, 24, 39, 0.24);
+=======
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 .page-header {
@@ -737,6 +779,7 @@ body.theme-dark .item-card-date {
 
 .item-form-grid {
   display: grid;
+<<<<<<< HEAD
   /* Pull the media column closer to the main fields */
   grid-template-columns: minmax(0, 0.95fr) minmax(620px, 1.05fr);
   gap: 0.9rem;
@@ -744,6 +787,14 @@ body.theme-dark .item-card-date {
 
 .item-form {
   max-width: 1440px;
+=======
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: 1.5rem;
+}
+
+.item-form {
+  max-width: 900px;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
   margin: 0;
 }
 
@@ -754,6 +805,7 @@ body.theme-dark .item-card-date {
 }
 
 .item-form-main textarea {
+<<<<<<< HEAD
   height: 220px;
   resize: none;
   overflow-y: auto;
@@ -797,6 +849,9 @@ body.theme-dark .item-form-main textarea {
 
 .item-form-side .item-new-media {
   margin-top: 0.25rem;
+=======
+  min-height: 120px;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 .item-form-side .hint {
@@ -806,17 +861,25 @@ body.theme-dark .item-form-main textarea {
 
 .item-card-image {
   width: 100%;
+<<<<<<< HEAD
   height: 210px;
   border-radius: 12px;
   overflow: hidden;
   /* Remove gray bars for portrait covers: let parent card background show through */
   background: transparent;
+=======
+  height: 160px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #e5e7eb;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
   margin-bottom: 0.5rem;
 }
 
 .item-card-image img {
   width: 100%;
   height: 100%;
+<<<<<<< HEAD
   /* Don't crop item images in grids — show full image */
   object-fit: contain;
   background: transparent;
@@ -1069,6 +1132,9 @@ body.theme-dark .item-existing-delete-toggle:has(input[type="checkbox"]:checked)
   color: #fff;
   cursor: pointer;
   line-height: 1;
+=======
+  object-fit: cover;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 .library-filters .library-search-input-row {
@@ -1108,6 +1174,7 @@ body.theme-dark .item-existing-delete-toggle:has(input[type="checkbox"]:checked)
   cursor: pointer;
 }
 
+<<<<<<< HEAD
 /* Section detail search */
 .section-search-input-row {
   display: none;
@@ -2133,6 +2200,8 @@ body.theme-dark .library-media-grid a {
   border-color: #374151;
 }
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 .advanced-toggle {
   display: inline-flex;
   align-items: center;
@@ -2359,7 +2428,10 @@ body.theme-dark .post-menu-btn:hover {
 .post-menu-item {
   width: 100%;
   text-align: left;
+<<<<<<< HEAD
   display: block;
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
   background: none;
   border: none;
   color: inherit;
@@ -2367,7 +2439,10 @@ body.theme-dark .post-menu-btn:hover {
   padding: 0.5rem 0.6rem;
   border-radius: 10px;
   font-size: 0.95rem;
+<<<<<<< HEAD
   text-decoration: none;
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 }
 
 .post-menu-item:hover {
@@ -2472,6 +2547,7 @@ body.theme-dark .post-menu-btn:hover {
   word-break: break-word;
 }
 
+<<<<<<< HEAD
 .post-text.post-text-compact {
   margin-top: 0.35rem;
   font-size: 0.95rem;
@@ -2502,6 +2578,8 @@ body.theme-dark .post-menu-btn:hover {
   align-self: flex-start;
 }
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 .post-text-toggle {
   margin-top: 0.4rem;
   border: none;
@@ -3175,6 +3253,7 @@ body.theme-dark .avatar-edit-hint {
   font-variant-numeric: tabular-nums;
 }
 
+<<<<<<< HEAD
 /* Section form counter: align under textarea and stick to the right edge */
 .char-counter[data-char-counter] {
   width: 100%;
@@ -3200,6 +3279,8 @@ body.theme-dark .avatar-edit-hint {
   margin-left: auto;
 }
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 body.theme-dark .char-counter {
   color: rgba(229, 231, 235, 0.55);
 }
@@ -3348,6 +3429,7 @@ body.theme-dark .avatar-crop-preview {
   border-radius: 50%;
 }
 
+<<<<<<< HEAD
 /* For section cover cropper we want square selection (not circle like avatar) */
 #section-cover-crop-modal .cropper-view-box,
 #section-cover-crop-modal .cropper-face {
@@ -3388,6 +3470,8 @@ body.theme-dark .avatar-crop-preview {
   background: transparent !important;
 }
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 .cropper-line,
 .cropper-point {
   background-color: rgba(255, 255, 255, 0.9);
@@ -3755,6 +3839,7 @@ body.theme-dark .back-link:hover {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
 }
 
+<<<<<<< HEAD
 /* Home page: dark theme buttons should NOT be light */
 body.theme-dark .home-menu-item {
   background: rgba(255, 255, 255, 0.04);
@@ -3769,6 +3854,8 @@ body.theme-dark .home-menu-item:hover {
   box-shadow: none;
 }
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 .home-menu-icon {
   font-size: 1.4rem;
 }
@@ -3778,6 +3865,7 @@ body.theme-dark .home-menu-item:hover {
 }
 
 @media (max-width: 768px) {
+<<<<<<< HEAD
   /* Keep sidebar on the left (do not move it to the top) */
   .layout {
     flex-direction: row;
@@ -3787,6 +3875,13 @@ body.theme-dark .home-menu-item:hover {
   }
   .main {
     padding: 1rem;
+=======
+  .layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
   }
 }
 

@@ -5,6 +5,7 @@
 
 {% block app_content %}
 <h1>{% trans "Удалить раздел" %}</h1>
+<<<<<<< HEAD
 <p>{% trans "Это второе подтверждение." %}</p>
 <p>{% trans "Вы действительно хотите удалить этот раздел? Предметы останутся, но связь с разделом будет удалена." %}</p>
 <p style="color:#6b7280;">
@@ -19,6 +20,14 @@
   </label>
   <button type="submit" class="btn btn-primary">{% trans "Да, удалить" %}</button>
   <button type="button" class="btn-back" onclick="history.back()"><span class="btn-back-ic">←</span> {% trans "Отмена" %}</button>
+=======
+<p>{% trans "Вы действительно хотите удалить этот раздел? Предметы останутся, но связь с разделом будет удалена." %}</p>
+<p><strong>{{ object.name }}</strong></p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">{% trans "Да, удалить" %}</button>
+  <button type="button" class="btn btn-link" onclick="history.back()">{% trans "Отмена" %}</button>
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 </form>
 {% endblock %}
 

@@ -15,6 +15,15 @@
         <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
       </select>
     </form>
+<<<<<<< HEAD
+=======
+    <div class="theme-toggle">
+      <span>{% trans "Тема" %}:</span>
+      <button type="button" class="theme-btn" onclick="setTheme('light')">☀</button>
+      <button type="button" class="theme-btn" onclick="setTheme('dark')">🌙</button>
+      <button type="button" class="theme-btn" onclick="setTheme('accessible')">👁</button>
+    </div>
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
   </div>
 </div>
 
@@ -23,7 +32,11 @@
     <span class="home-menu-icon">👤</span>
     <span class="home-menu-text">{% trans "Мой профиль" %}</span>
   </a>
+<<<<<<< HEAD
   <a class="home-menu-item" href="{% url 'library:home' %}">
+=======
+  <a class="home-menu-item" href="{% url 'library:collection_list' %}">
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
     <span class="home-menu-icon">📁</span>
     <span class="home-menu-text">{% trans "Библиотека" %}</span>
   </a>

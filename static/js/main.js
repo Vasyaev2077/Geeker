@@ -33,6 +33,7 @@
     } catch (e) {}
     applyTheme(theme);
 
+<<<<<<< HEAD
     // Expose navbar height to CSS so sidebar can stick correctly everywhere
     function syncNavbarHeight() {
       const nav = document.querySelector(".navbar");
@@ -71,6 +72,8 @@
       updateThemeIcon();
     }
 
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
     // Sidebar toggle
     try {
       const storedSidebar = localStorage.getItem(SIDEBAR_KEY);
@@ -98,10 +101,13 @@
       const searchBack = document.getElementById("library-search-back");
       const searchClear = document.getElementById("library-search-clear");
       const searchInput = searchRow ? searchRow.querySelector("input[type='search']") : null;
+<<<<<<< HEAD
       const orderSelect = libraryFilters.querySelector("select[name='order']");
       const advancedToggle = libraryFilters.querySelector("input[name='advanced']");
       const descOnlyToggle = libraryFilters.querySelector("input[name='search_in_description']");
       const sectionCheckboxes = Array.from(libraryFilters.querySelectorAll("input[name='sections']"));
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
       function openSearch() {
         libraryFilters.classList.add("search-open");
@@ -123,6 +129,7 @@
       if (searchClear && searchInput) {
         searchClear.addEventListener("click", function () {
           searchInput.value = "";
+<<<<<<< HEAD
           scheduleSubmit();
         });
       }
@@ -331,5 +338,10 @@
         if (e.key === "Escape" && !modal.hidden) close();
       });
     })();
+=======
+        });
+      }
+    }
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
   });
 })();

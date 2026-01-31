@@ -2,7 +2,10 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
+<<<<<<< HEAD
 from .forms import LocalPasswordResetForm
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 app_name = "accounts"
 
@@ -16,7 +19,10 @@ urlpatterns = [
         "password-reset/",
         auth_views.PasswordResetView.as_view(
             template_name="accounts/password_reset_form.html",
+<<<<<<< HEAD
             form_class=LocalPasswordResetForm,
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
             email_template_name="accounts/password_reset_email.txt",
             subject_template_name="accounts/password_reset_subject.txt",
             success_url="/accounts/password-reset/done/",

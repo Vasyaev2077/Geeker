@@ -4,6 +4,7 @@ from .models import Section, Collection, Item
 
 
 class SectionForm(forms.ModelForm):
+<<<<<<< HEAD
     name = forms.CharField(label="Название раздела", required=True)
 
     class Meta:
@@ -19,6 +20,13 @@ class SectionForm(forms.ModelForm):
             # Use plain FileInput so Django doesn't render "currently/clear" block
             "cover": forms.FileInput(),
         }
+=======
+    name = forms.CharField(label="Название раздела", required=False)
+
+    class Meta:
+        model = Section
+        fields = ["name"]
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 
 class CollectionForm(forms.ModelForm):
@@ -36,16 +44,24 @@ class CollectionForm(forms.ModelForm):
 class ItemInlineForm(forms.ModelForm):
     class Meta:
         model = Item
+<<<<<<< HEAD
         fields = ["title", "description", "sections", "tags"]
+=======
+        fields = ["title", "description", "sections"]
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
         labels = {
             "title": "Название предмета",
             "description": "Описание",
             "sections": "Разделы",
+<<<<<<< HEAD
             "tags": "Теги",
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
         }
         widgets = {
             "description": forms.Textarea(attrs={"rows": 3}),
             "sections": forms.SelectMultiple(attrs={"size": 1}),
+<<<<<<< HEAD
         }
 
 
@@ -65,4 +81,6 @@ class ItemForm(forms.ModelForm):
             "description": forms.Textarea(attrs={"rows": 5}),
             "sections": forms.SelectMultiple(attrs={"size": 1}),
             "metadata": forms.HiddenInput(attrs={"data-metadata-json": "1"}),
+=======
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
         }

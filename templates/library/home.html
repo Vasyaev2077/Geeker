@@ -1,14 +1,22 @@
 {% extends "base/base_app.html" %}
+<<<<<<< HEAD
 {% load i18n static %}
 {% trans "Точно удалить раздел? Потом будет ещё одно подтверждение." as confirm_delete_section %}
 {% trans "Точно удалить предмет? Потом будет ещё одно подтверждение." as confirm_delete_item %}
+=======
+{% load i18n %}
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
 
 {% block title %}{% trans "Библиотека" %}{% endblock %}
 
 {% block app_content %}
 <form method="get" class="library-filters">
   <div class="page-header">
+<<<<<<< HEAD
     <div class="library-header-title">{% trans "Библиотека" %}</div>
+=======
+    <div></div>
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
     <div class="page-header-actions">
       <button type="button" class="search-icon-button" id="library-search-toggle">
         🔍
@@ -20,6 +28,7 @@
           name="q"
           value="{{ query }}"
           class="search-input"
+<<<<<<< HEAD
           placeholder="{% trans 'Поиск по разделам и предметам' %}"
         >
         <button type="button" class="search-clear" id="library-search-clear">✕</button>
@@ -28,6 +37,17 @@
         {% trans "+ Создать раздел" %}
       </a>
       <select name="order" class="order-select search-extra" style="display:inline-block;">
+=======
+          placeholder="{% trans 'Поиск по коллекции' %}"
+        >
+        <button type="button" class="search-clear" id="library-search-clear">✕</button>
+        <label class="advanced-toggle">
+          <input type="checkbox" name="advanced" {% if advanced %}checked{% endif %}>
+          {% trans "Расширенный" %}
+        </label>
+      </div>
+      <select name="order" class="order-select search-extra">
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
         <option value="recent" {% if current_order == 'recent' %}selected{% endif %}>{% trans "Недавно добавленные" %}</option>
         <option value="oldest" {% if current_order == 'oldest' %}selected{% endif %}>{% trans "Давно добавленные" %}</option>
         <option value="az" {% if current_order == 'az' %}selected{% endif %}>{% trans "От А до Я" %}</option>
@@ -36,6 +56,16 @@
     </div>
   </div>
 
+<<<<<<< HEAD
+=======
+  <div class="advanced-panel {% if not advanced %}advanced-hidden{% endif %}">
+    <label>
+      <input type="checkbox" name="search_in_description" {% if request.GET.search_in_description == 'on' %}checked{% endif %}>
+      {% trans "Искать только в описании" %}
+    </label>
+  </div>
+
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
   <div class="pill-filters">
     {% for section in sections %}
       <label class="pill">
@@ -48,12 +78,17 @@
         {{ section.name }}
       </label>
     {% empty %}
+<<<<<<< HEAD
       {# no sections: keep UI clean (no text) #}
+=======
+      <span>{% trans "У вас пока нет разделов. Создайте их в админке." %}</span>
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
     {% endfor %}
   </div>
 
 </form>
 
+<<<<<<< HEAD
 <div class="section-grid" style="margin-top:0.9rem;">
   {% for section in sections %}
     <div class="section-card">
@@ -201,3 +236,35 @@
 {% endblock %}
 
  
+=======
+<div class="collection-grid" style="margin-top:0.8rem;">
+  {% for item in items %}
+    <article class="collection-card">
+      <div class="item-card-image">
+        {% with primary=item.media.all.0 %}
+          {% if primary %}
+            <img src="{{ primary.file.url }}" alt="{{ item.title }}">
+          {% endif %}
+        {% endwith %}
+      </div>
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.description|truncatewords:15 }}</p>
+    </article>
+  {% empty %}
+    <p>{% trans "Нет предметов в библиотеке." %}</p>
+  {% endfor %}
+</div>
+{% include "base/_pagination.html" with page_obj=page_obj %}
+<div style="margin-top:1rem;">
+  <a href="{% url 'library:collection_create' %}" class="btn btn-primary">
+    {% trans "Создать коллекцию" %}
+  </a>
+</div>
+{% endblock %}
+
+
+
+
+
+
+>>>>>>> c3b89d27ec563af11f9e50443796471accc02753
